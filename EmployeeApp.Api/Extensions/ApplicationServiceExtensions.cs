@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using EmployeeApp.Api.Data;
+using EmployeeApp.Api.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeApp.Api.Extensions
@@ -19,6 +16,11 @@ namespace EmployeeApp.Api.Extensions
                 opts.UseMySQL(connectionString);
             });
 
+            services.AddScoped<Func<EmployeeAppDbContext>>((provider) => () =>
+                provider.GetService<EmployeeAppDbContext>());
+
+            services.AddScoped<DbFactory>();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             return services;
         }
     }
