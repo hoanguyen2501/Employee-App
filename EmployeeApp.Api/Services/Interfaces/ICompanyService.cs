@@ -1,5 +1,4 @@
 using EmployeeApp.Api.DTOs.Company;
-using EmployeeApp.Api.Entities;
 
 namespace EmployeeApp.Api.Services.Interfaces
 {

@@ -11,7 +11,7 @@ namespace EmployeeApp.Api.Data.Seeding
             if (await context.Companies.AnyAsync())
                 return;
 
-            var companiesData = await File.ReadAllTextAsync("Data/generated.json");
+            var companiesData = await File.ReadAllTextAsync("Data/generated-company-data.json");
 
             var options = new JsonSerializerOptions
             {

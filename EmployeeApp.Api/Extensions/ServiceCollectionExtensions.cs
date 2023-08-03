@@ -11,6 +11,7 @@ namespace EmployeeApp.Api.Extensions
         {
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ICompanyService, CompanyService>();
+            services.AddScoped<IEmployeeService, EmployeeService>();
             return services;
         }
     }

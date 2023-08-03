@@ -49,10 +49,10 @@ namespace EmployeeApp.Api.Services.Implementations
                 await _unitOfWork.CommitTransaction();
                 return true;
             }
-            catch (System.Exception)
+            catch (Exception)
             {
                 await _unitOfWork.RollbackTransaction();
-                throw;
+                return false;
             }
         }
 
@@ -65,7 +65,7 @@ namespace EmployeeApp.Api.Services.Implementations
                 var companyRepos = _unitOfWork.Repository<Company>();
                 var company = await companyRepos.FindAsync(companyId);
                 if (company == null)
-                    throw new KeyNotFoundException();
+                    return false;
 
                 _mapper.Map<UpdateCompanyDto, Company>(companyInput, company);
                 await companyRepos.UpdateAsync(company);
@@ -73,10 +73,10 @@ namespace EmployeeApp.Api.Services.Implementations
                 await _unitOfWork.CommitTransaction();
                 return true;
             }
-            catch (System.Exception)
+            catch (Exception)
             {
                 await _unitOfWork.RollbackTransaction();
-                throw;
+                return false;
             }
         }
 
@@ -89,19 +89,17 @@ namespace EmployeeApp.Api.Services.Implementations
                 var companyRepos = _unitOfWork.Repository<Company>();
                 var company = await companyRepos.FindAsync(companyId);
                 if (company == null)
-                    throw new KeyNotFoundException();
+                    return false;
 
                 await companyRepos.DeleteAsync(companyId);
                 await _unitOfWork.CommitTransaction();
                 return true;
             }
-            catch (System.Exception)
+            catch (Exception)
             {
                 await _unitOfWork.RollbackTransaction();
-                throw;
+                return false;
             }
         }
-
-
     }
 }
