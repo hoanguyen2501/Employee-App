@@ -19,6 +19,49 @@ namespace EmployeeApp.Api.Data.Migrations
                 .HasAnnotation("ProductVersion", "7.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
+            modelBuilder.Entity("EmployeeApp.Api.Entities.AppUser", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<byte[]>("PasswordHash")
+                        .HasColumnType("longblob");
+
+                    b.Property<byte[]>("PasswordSalt")
+                        .HasColumnType("longblob");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Username")
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Username")
+                        .IsUnique();
+
+                    b.ToTable("AppUser", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("a1cf9b0a-aaa0-419b-a652-2ce163db8ad1"),
+                            CreatedAt = new DateTime(2023, 8, 9, 4, 15, 55, 566, DateTimeKind.Utc).AddTicks(4530),
+                            PasswordHash = new byte[] { 38, 166, 209, 68, 174, 249, 180, 80, 243, 185, 162, 88, 157, 255, 136, 206, 24, 113, 62, 112, 167, 204, 87, 166, 167, 108, 105, 99, 155, 215, 161, 20, 50, 91, 245, 15, 68, 172, 106, 112, 1, 46, 115, 251, 178, 94, 18, 236, 111, 241, 30, 109, 191, 167, 45, 249, 150, 184, 94, 91, 100, 88, 209, 44 },
+                            PasswordSalt = new byte[] { 223, 254, 145, 156, 119, 109, 1, 232, 47, 202, 1, 128, 133, 196, 89, 102, 218, 46, 12, 63, 156, 33, 182, 99, 100, 145, 222, 155, 98, 145, 55, 178, 248, 9, 243, 122, 97, 132, 71, 217, 17, 234, 21, 255, 66, 94, 37, 151, 224, 20, 167, 208, 30, 139, 117, 15, 104, 64, 190, 28, 72, 44, 135, 152, 222, 212, 97, 79, 157, 254, 169, 156, 74, 76, 18, 231, 107, 52, 82, 61, 249, 202, 193, 77, 119, 125, 165, 14, 168, 217, 132, 101, 61, 194, 180, 205, 255, 224, 191, 248, 154, 31, 247, 16, 219, 51, 75, 200, 18, 62, 7, 213, 195, 26, 255, 43, 14, 237, 169, 90, 86, 154, 24, 28, 151, 58, 74, 51 },
+                            UpdatedAt = new DateTime(2023, 8, 9, 4, 15, 55, 566, DateTimeKind.Utc).AddTicks(4533),
+                            Username = "admin"
+                        });
+                });
+
             modelBuilder.Entity("EmployeeApp.Api.Entities.Company", b =>
                 {
                     b.Property<Guid>("Id")
@@ -28,6 +71,12 @@ namespace EmployeeApp.Api.Data.Migrations
                     b.Property<string>("Address")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("City")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("CompanyName")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("Country")
                         .HasColumnType("longtext");
 
@@ -35,20 +84,26 @@ namespace EmployeeApp.Api.Data.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Email")
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("longtext");
+                    b.Property<DateTime>("EstablishedAt")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Companies");
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("PhoneNumber")
+                        .IsUnique();
+
+                    b.ToTable("Company", (string)null);
                 });
 
             modelBuilder.Entity("EmployeeApp.Api.Entities.Employee", b =>
@@ -60,7 +115,10 @@ namespace EmployeeApp.Api.Data.Migrations
                     b.Property<string>("Address")
                         .HasColumnType("longtext");
 
-                    b.Property<Guid>("CompanyId")
+                    b.Property<string>("City")
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid?>("CompanyId")
                         .HasColumnType("char(36)");
 
                     b.Property<string>("Country")
@@ -73,13 +131,16 @@ namespace EmployeeApp.Api.Data.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Email")
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("FirstName")
                         .HasColumnType("longtext");
 
                     b.Property<bool>("Gender")
                         .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime>("HiredAt")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("ImageUrl")
                         .HasColumnType("longtext");
@@ -88,7 +149,7 @@ namespace EmployeeApp.Api.Data.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -97,7 +158,13 @@ namespace EmployeeApp.Api.Data.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.ToTable("Employees");
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("PhoneNumber")
+                        .IsUnique();
+
+                    b.ToTable("Employee", (string)null);
                 });
 
             modelBuilder.Entity("EmployeeApp.Api.Entities.Employee", b =>
@@ -105,8 +172,7 @@ namespace EmployeeApp.Api.Data.Migrations
                     b.HasOne("EmployeeApp.Api.Entities.Company", "Company")
                         .WithMany("Employees")
                         .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Company");
                 });

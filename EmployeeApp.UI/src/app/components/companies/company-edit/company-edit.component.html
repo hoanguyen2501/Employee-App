@@ -1,0 +1,104 @@
+<div class="container">
+  <div *ngIf="company">
+    <h2 class="my-4">Edit company</h2>
+    <p class="fs-4">Employee ID: {{ company.id }}</p>
+    <form
+      class="row g-3 needs-validation"
+      [noValidate]="false"
+      [formGroup]="companyEditForm"
+      (ngSubmit)="updateCompany(company.id)"
+    >
+      <div class="col-md-6">
+        <app-text-input
+          [formControl]="$any(companyEditForm.controls['companyName'])"
+          [id]="'companyName'"
+          [label]="'Company Name'"
+          [placeholder]="'ABC Solutions'"
+        ></app-text-input>
+      </div>
+      <div class="col-md-6">
+        <app-text-input
+          [formControl]="$any(companyEditForm.controls['establishedAt'])"
+          [label]="'Established At'"
+          [id]="'establishedAt'"
+          [type]="'date'"
+        ></app-text-input>
+      </div>
+      <div class="col-md-6">
+        <app-text-input
+          [formControl]="$any(companyEditForm.controls['email'])"
+          [label]="'Email'"
+          [id]="'email'"
+          [placeholder]="'company@abcsolutions.com'"
+        ></app-text-input>
+      </div>
+      <div class="col-md-6">
+        <app-text-input
+          [formControl]="$any(companyEditForm.controls['phoneNumber'])"
+          [label]="'Phone Number'"
+          [id]="'phoneNumber'"
+          [placeholder]="'1234567890'"
+        ></app-text-input>
+      </div>
+
+      <div class="col-md-4">
+        <app-text-input
+          [formControl]="$any(companyEditForm.controls['address'])"
+          [label]="'Address'"
+          [id]="'address'"
+          [placeholder]="'1234 Main St'"
+        ></app-text-input>
+      </div>
+      <div class="col-md-4">
+        <app-text-input
+          [formControl]="$any(companyEditForm.controls['city'])"
+          [label]="'City'"
+          [id]="'city'"
+          [placeholder]="'Wall'"
+        ></app-text-input>
+      </div>
+      <div class="col-md-4">
+        <app-text-input
+          [formControl]="$any(companyEditForm.controls['country'])"
+          [label]="'Country'"
+          [id]="'country'"
+          [placeholder]="'England'"
+        ></app-text-input>
+      </div>
+      <div class="row mt-4">
+        <div class="col-12">
+          <button
+            type="submit"
+            class="btn btn-success"
+            [disabled]="
+              !(companyEditForm.status === 'VALID' && companyEditForm.dirty)
+                ? true
+                : false
+            "
+          >
+            Save changes
+          </button>
+          <a
+            [ngClass]="
+              companyEditForm.status === 'VALID' && companyEditForm.dirty
+                ? 'disabled'
+                : ''
+            "
+            class="btn btn-danger ms-2"
+            role="button"
+            [routerLink]="['/companies', company.id]"
+            >Back to details</a
+          >
+        </div>
+      </div>
+    </form>
+    <div class="col-12 mt-4">
+      <div class="alert alert-warning pb-2" *ngIf="companyEditForm.dirty">
+        <p>
+          <strong>Information: </strong>You have made changes. Any unsaved
+          changes will be lost!
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

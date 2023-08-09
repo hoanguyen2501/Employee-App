@@ -1,0 +1,67 @@
+<div class="container py-4 table-responsive">
+  <h3>Employee List</h3>
+  <button type="button" class="btn btn-primary mt-2" (click)="addEmployeeBtn()">
+    Add
+  </button>
+  <div class="employee-list" *ngIf="employees.length > 0">
+    <div class="paging">
+      <ul class="pagination justify-content-end" style="margin: 20px 0">
+        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+        <li
+          class="page-item"
+          *ngFor="let page of numSequence(totalPages)"
+          [ngClass]="page === activatedPage ? 'active' : ''"
+        >
+          <a class="page-link" href="#">{{ page }}</a>
+        </li>
+        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+      </ul>
+    </div>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th scope="col">Full name</th>
+
+          <th scope="col">Birthday</th>
+          <th scope="col">Gender</th>
+          <th scope="col">Address</th>
+          <th scope="col">Email</th>
+          <th scope="col">Phone</th>
+          <th scope="col" colspan="2">#</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let employee of employees"
+          (click)="employeeDetailsBtn(employee.id)"
+        >
+          <td>{{ employee.firstName }} {{ employee.lastName }}</td>
+          <td>{{ employee.dateOfBirth }}</td>
+          <td>{{ employee.gender ? "Female" : "Male" }}</td>
+          <td>{{ employee.address }}</td>
+          <td>{{ employee.email }}</td>
+          <td>{{ employee.phoneNumber }}</td>
+          <td class="text-center">
+            <a
+              class="btn btn-primary me-2"
+              [routerLink]="['/employees', 'edit', employee.id]"
+              role="button"
+              >Edit</a
+            >
+            <button
+              type="button"
+              class="btn btn-danger"
+              (click)="deleteEmployee(employee.id, $event)"
+            >
+              Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="text-center fs-4 mt-4" *ngIf="employees.length <= 0 || !employees">
+    No employees found
+  </p>
+</div>

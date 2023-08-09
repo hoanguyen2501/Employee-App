@@ -1,0 +1,88 @@
+<div class="container">
+  <h2 class="my-4">Add new company</h2>
+  <form
+    class="row g-3 needs-validation"
+    [noValidate]="false"
+    [formGroup]="companyForm"
+    (ngSubmit)="addCompany()"
+  >
+    <div class="col-md-6">
+      <app-text-input
+        [formControl]="$any(companyForm.controls['companyName'])"
+        [id]="'companyName'"
+        [label]="'Company Name'"
+        [placeholder]="'ABC Solutions'"
+      ></app-text-input>
+    </div>
+    <div class="col-md-6">
+      <app-text-input
+        [formControl]="$any(companyForm.controls['establishedAt'])"
+        [label]="'Established At'"
+        [id]="'establishedAt'"
+        [type]="'date'"
+      ></app-text-input>
+    </div>
+    <div class="col-md-6">
+      <app-text-input
+        [formControl]="$any(companyForm.controls['email'])"
+        [label]="'Email'"
+        [id]="'email'"
+        [placeholder]="'company@abcsolutions.com'"
+      ></app-text-input>
+    </div>
+    <div class="col-md-6">
+      <app-text-input
+        [formControl]="$any(companyForm.controls['phoneNumber'])"
+        [label]="'Phone Number'"
+        [id]="'phoneNumber'"
+        [placeholder]="'1234567890'"
+      ></app-text-input>
+    </div>
+
+    <div class="col-md-4">
+      <app-text-input
+        [formControl]="$any(companyForm.controls['address'])"
+        [label]="'Address'"
+        [id]="'address'"
+        [placeholder]="'1234 Main St'"
+      ></app-text-input>
+    </div>
+    <div class="col-md-4">
+      <app-text-input
+        [formControl]="$any(companyForm.controls['city'])"
+        [label]="'City'"
+        [id]="'city'"
+        [placeholder]="'Wall'"
+      ></app-text-input>
+    </div>
+    <div class="col-md-4">
+      <app-text-input
+        [formControl]="$any(companyForm.controls['country'])"
+        [label]="'Country'"
+        [id]="'country'"
+        [placeholder]="'England'"
+      ></app-text-input>
+    </div>
+    <div class="row mt-4">
+      <div class="col-12">
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="
+            !(companyForm.status === 'VALID' && companyForm.dirty)
+              ? true
+              : false
+          "
+        >
+          Add</button
+        ><a
+          [ngClass]="companyForm.dirty ? 'disabled' : ''"
+          class="btn btn-danger ms-2"
+          role="button"
+          [routerLink]="['/companies']"
+          >Back to list</a
+        >
+      </div>
+    </div>
+  </form>
+</div>
