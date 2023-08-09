@@ -6,8 +6,8 @@ namespace EmployeeApp.Api.Services.Interfaces
     {
         Task<IList<CompanyDto>> GetCompaniesAsync();
         Task<CompanyDto> GetCompanyAsync(Guid companyId);
-        Task<bool> CreateAsync(CreateCompanyDto companyInput);
-        Task<bool> UpdateAsync(Guid companyId, UpdateCompanyDto companyInput);
+        Task<Guid?> CreateAsync(CreateCompanyDto companyInput);
+        Task<Guid?> UpdateAsync(Guid companyId, UpdateCompanyDto companyInput);
         Task<bool> DeleteAsync(Guid companyId);
 
     }

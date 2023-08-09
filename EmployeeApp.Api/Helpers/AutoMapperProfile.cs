@@ -13,11 +13,7 @@ namespace EmployeeApp.Api.Helpers
             CreateMap<CreateCompanyDto, Company>();
             CreateMap<UpdateCompanyDto, Company>();
 
-            CreateMap<Employee, EmployeeDto>()
-                    .ForMember(dest => dest.Gender, opts =>
-                        opts.MapFrom(src =>
-                            src.Gender ? "Female" : "Male"))
-                    .ReverseMap();
+            CreateMap<Employee, EmployeeDto>().ReverseMap();
             CreateMap<CreateEmployeeDto, Employee>();
             CreateMap<UpdateEmployeeDto, Employee>();
         }

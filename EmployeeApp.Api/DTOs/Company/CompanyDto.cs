@@ -5,7 +5,7 @@ namespace EmployeeApp.Api.DTOs.Company
     public class CompanyDto
     {
         public Guid Id { get; set; }
-        public string Name { get; set; }
+        public string CompanyName { get; set; }
         public string Address { get; set; }
         public DateTime EstablishedAt { get; set; }
         public string Country { get; set; }

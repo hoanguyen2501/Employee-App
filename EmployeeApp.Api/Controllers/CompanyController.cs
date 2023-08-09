@@ -1,4 +1,6 @@
 using EmployeeApp.Api.DTOs.Company;
+using EmployeeApp.Api.Entities;
+using EmployeeApp.Api.Services.Implementations;
 using EmployeeApp.Api.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,37 +26,40 @@ namespace EmployeeApp.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<CompanyDto>> GetCompanyById(string id)
+        public async Task<ActionResult<CompanyDto>> GetCompanyById(Guid id)
         {
-            var company = await _companyService.GetCompanyAsync(Guid.Parse(id));
+            var company = await _companyService.GetCompanyAsync(id);
             if (company == null)
                 return NotFound();
 
             return Ok(company);
         }
 
-        [HttpPost]
+        [HttpPost("add")]
         public async Task<ActionResult> CreateNewCompany(CreateCompanyDto createCompanyDto)
         {
-            var result = await _companyService.CreateAsync(createCompanyDto);
-            if (!result)
+            var companyId = await _companyService.CreateAsync(createCompanyDto);
+            if (companyId == null)
                 return BadRequest("An error occurred during creating");
 
-            return NoContent();
+            var newCompany = await _companyService.GetCompanyAsync(companyId.Value);
 
+            return CreatedAtAction(nameof(GetCompanyById), newCompany, new { id = companyId });
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateComapny(Guid id, UpdateCompanyDto updateCompanyDto)
+        [HttpPut("edit/{id}")]
+        public async Task<ActionResult<CompanyDto>> UpdateComapny(Guid id, UpdateCompanyDto updateCompanyDto)
         {
-            var result = await _companyService.UpdateAsync(id, updateCompanyDto);
-            if (!result)
+            var companyId = await _companyService.UpdateAsync(id, updateCompanyDto);
+            if (companyId == null)
                 return BadRequest("An error occurred during deleting");
 
-            return Ok();
+            var updatedCompany = await _companyService.GetCompanyAsync(companyId.Value);
+
+            return Ok(updatedCompany);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("delete/{id}")]
         public async Task<ActionResult> DeleteCompany(Guid id)
         {
             var result = await _companyService.DeleteAsync(id);

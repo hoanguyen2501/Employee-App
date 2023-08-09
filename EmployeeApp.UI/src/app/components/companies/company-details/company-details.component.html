@@ -1,0 +1,47 @@
+<div class="container">
+  <h2 class="my-4">Company details</h2>
+  <div class="row" *ngIf="company">
+    <div class="col-12 shadow-lg p-3 bg-body rounded company-info">
+      <div class="company-info__details">
+        <div class="row fs-5 p-2 mx-2">
+          <div class="col-6">
+            <p><strong>Company name:</strong> {{ company.companyName }}</p>
+          </div>
+          <div class="col-6">
+            <p><strong>Established at: </strong> {{ company.establishedAt }}</p>
+          </div>
+        </div>
+        <div class="row fs-5 p-2 mx-2">
+          <div class="col-6">
+            <p><strong>Email:</strong> {{ company.email }}</p>
+          </div>
+          <div class="col-6">
+            <p><strong>Phone number:</strong> {{ company.phoneNumber }}</p>
+          </div>
+          <div class="col-12">
+            <p><strong>Address</strong> {{ company.address }}</p>
+          </div>
+          <div class="col-12">
+            <p><strong>City:</strong> {{ company.city }}</p>
+          </div>
+          <div class="col-12">
+            <p><strong>Country:</strong> {{ company.country }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 mt-4">
+      <div class="button-group">
+        <a class="btn btn-primary" role="button" [routerLink]="['/companies']"
+          >Back to list</a
+        >
+        <a
+          class="btn btn-success ms-2"
+          [routerLink]="['/companies', 'edit', company.id]"
+          role="button"
+          >Edit</a
+        >
+      </div>
+    </div>
+  </div>
+</div>

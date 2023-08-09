@@ -1,7 +1,7 @@
 [
   {
     "Id": "c50fa6a9-25c9-4ef6-8dca-7cf9dd582a7f",
-    "Name": "STRALUM",
+    "CompanyName": "STRALUM",
     "EstablishedAt": "2017-02-03",
     "Address": "143 Gotham Avenue",
     "City": "Yorklyn",
@@ -104,7 +104,7 @@
   },
   {
     "Id": "d11aaef7-f2c3-4a42-93e2-74714b7abf03",
-    "Name": "OLUCORE",
+    "CompanyName": "OLUCORE",
     "EstablishedAt": "2014-05-08",
     "Address": "210 Beard Street",
     "City": "Oceola",
@@ -207,7 +207,7 @@
   },
   {
     "Id": "da4b8c1f-3337-4505-adab-07d7bf78cf41",
-    "Name": "TASMANIA",
+    "CompanyName": "TASMANIA",
     "EstablishedAt": "2023-02-04",
     "Address": "802 Chester Street",
     "City": "Murillo",
@@ -310,7 +310,7 @@
   },
   {
     "Id": "f9c0f366-e0f9-4cf0-b727-72944a4d84ba",
-    "Name": "MAXIMIND",
+    "CompanyName": "MAXIMIND",
     "EstablishedAt": "2017-08-25",
     "Address": "702 Ingraham Street",
     "City": "Loveland",
@@ -400,7 +400,7 @@
   },
   {
     "Id": "aea1b684-78b8-4c5d-943a-830c27cf221e",
-    "Name": "CONFERIA",
+    "CompanyName": "CONFERIA",
     "EstablishedAt": "2018-04-03",
     "Address": "162 Greene Avenue",
     "City": "Wanship",

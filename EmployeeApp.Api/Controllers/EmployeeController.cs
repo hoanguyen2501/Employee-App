@@ -1,5 +1,8 @@
+using System;
 using EmployeeApp.Api.DTOs.Employee;
+using EmployeeApp.Api.Entities;
 using EmployeeApp.Api.Services.Interfaces;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeeApp.Api.Controllers
@@ -29,32 +32,36 @@ namespace EmployeeApp.Api.Controllers
             var employee = await _employeeService.GetEmployeeAsync(id);
             if (employee == null)
                 return NotFound();
-
+            
             return Ok(employee);
         }
 
-        [HttpPost]
+        [HttpPost("add")]
         public async Task<ActionResult> CreateNewEmployee(CreateEmployeeDto createEmployeeDto)
         {
-            var result = await _employeeService.CreateAsync(createEmployeeDto);
-            if (!result)
+            var employeeId = await _employeeService.CreateAsync(createEmployeeDto);
+            if (employeeId == null)
                 return BadRequest("An error occurred during creating");
 
-            return NoContent();
+            var newEmployee = await _employeeService.GetEmployeeAsync(employeeId.Value);
+
+            return CreatedAtAction(nameof(GetEmployee), newEmployee, new { id = employeeId });
 
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateComapny(Guid id, UpdateEmployeeDto updateEmployeeDto)
+        [HttpPut("edit/{id}")]
+        public async Task<ActionResult<EmployeeDto>> UpdateComapny(Guid id, UpdateEmployeeDto updateEmployeeDto)
         {
-            var result = await _employeeService.UpdateAsync(id, updateEmployeeDto);
-            if (!result)
+            var employeeId = await _employeeService.UpdateAsync(id, updateEmployeeDto);
+            if (employeeId == null)
                 return BadRequest("An error occurred during deleting");
 
-            return NoContent();
+            var updatedEmployee = await _employeeService.GetEmployeeAsync(employeeId.Value);
+
+            return Ok(updatedEmployee);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("delete/{id}")]
         public async Task<ActionResult> DeleteEmployee(Guid id)
         {
             var result = await _employeeService.DeleteAsync(id);

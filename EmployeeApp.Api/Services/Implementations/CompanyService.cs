@@ -20,7 +20,7 @@ namespace EmployeeApp.Api.Services.Implementations
 
         public async Task<IList<CompanyDto>> GetCompaniesAsync()
         {
-            var companies = await _unitOfWork.Repository<Company>().GetAllAsync(x => x.Employees);
+            var companies = await _unitOfWork.Repository<Company>().GetAllAsync();
 
             var companiesToReturn = _mapper.Map<IList<CompanyDto>>(companies);
             return companiesToReturn;
@@ -34,7 +34,7 @@ namespace EmployeeApp.Api.Services.Implementations
             return companyToReturn;
         }
 
-        public async Task<bool> CreateAsync(CreateCompanyDto companyInput)
+        public async Task<Guid?> CreateAsync(CreateCompanyDto companyInput)
         {
             try
             {
@@ -47,16 +47,16 @@ namespace EmployeeApp.Api.Services.Implementations
                 await companyRepos.InsertAsync(company);
 
                 await _unitOfWork.CommitTransaction();
-                return true;
+                return company.Id;
             }
             catch (Exception)
             {
                 await _unitOfWork.RollbackTransaction();
-                return false;
+                return null;
             }
         }
 
-        public async Task<bool> UpdateAsync(Guid companyId, UpdateCompanyDto companyInput)
+        public async Task<Guid?> UpdateAsync(Guid companyId, UpdateCompanyDto companyInput)
         {
             try
             {
@@ -65,18 +65,18 @@ namespace EmployeeApp.Api.Services.Implementations
                 var companyRepos = _unitOfWork.Repository<Company>();
                 var company = await companyRepos.FindAsync(companyId);
                 if (company == null)
-                    return false;
+                    return null;
 
                 _mapper.Map<UpdateCompanyDto, Company>(companyInput, company);
                 await companyRepos.UpdateAsync(company);
 
                 await _unitOfWork.CommitTransaction();
-                return true;
+                return company.Id;
             }
             catch (Exception)
             {
                 await _unitOfWork.RollbackTransaction();
-                return false;
+                return null;
             }
         }
 

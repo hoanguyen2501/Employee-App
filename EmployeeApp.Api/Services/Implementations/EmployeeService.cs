@@ -33,7 +33,7 @@ namespace EmployeeApp.Api.Services.Implementations
             return employeeToReturn;
         }
 
-        public async Task<bool> CreateAsync(CreateEmployeeDto employeeInput)
+        public async Task<Guid?> CreateAsync(CreateEmployeeDto employeeInput)
         {
             try
             {
@@ -42,20 +42,21 @@ namespace EmployeeApp.Api.Services.Implementations
                 var employeeRepos = _unitOfWork.Repository<Employee>();
                 var employee = _mapper.Map<Employee>(employeeInput);
                 employee.Id = Guid.NewGuid();
+                employee.ImageUrl = "./assets/user.png";
 
                 await employeeRepos.InsertAsync(employee);
 
                 await _unitOfWork.CommitTransaction();
-                return true;
+                return employee.Id;
             }
             catch (Exception)
             {
                 await _unitOfWork.RollbackTransaction();
-                return false;
+                return null;
             }
         }
 
-        public async Task<bool> UpdateAsync(Guid employeeId, UpdateEmployeeDto employeeInput)
+        public async Task<Guid?> UpdateAsync(Guid employeeId, UpdateEmployeeDto employeeInput)
         {
             try
             {
@@ -64,18 +65,18 @@ namespace EmployeeApp.Api.Services.Implementations
                 var employeeRepos = _unitOfWork.Repository<Employee>();
                 var employee = await employeeRepos.FindAsync(employeeId);
                 if (employee == null)
-                    return false;
+                    return null;
 
                 _mapper.Map(employeeInput, employee);
                 await employeeRepos.UpdateAsync(employee);
 
                 await _unitOfWork.CommitTransaction();
-                return true;
+                return employee.Id;
             }
             catch (Exception)
             {
                 await _unitOfWork.RollbackTransaction();
-                return false;
+                return null;
             }
         }
 
