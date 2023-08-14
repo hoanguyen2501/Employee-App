@@ -4,3 +4,8 @@
 :host ::ng-deep .content-title {
   margin-bottom: 20px;
 }
+
+::ng-deep .mat-select-disabled .mat-select-value,
+::ng-deep .mat-input-element:disabled {
+  color: rgba(0, 0, 0, 0.75);
+}

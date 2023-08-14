@@ -1,5 +1,10 @@
-import { Component, HostListener, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  FormGroupDirective,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
@@ -25,6 +30,8 @@ export class EmployeeEditComponent implements OnInit, PendingChangesGuard {
     }
   }
   employeeForm: FormGroup = new FormGroup({});
+  @ViewChild(FormGroupDirective, { static: false })
+  formGroupDirective: any = FormGroupDirective;
   employee: Employee | undefined;
   employeeId: string = '';
 
@@ -97,6 +104,18 @@ export class EmployeeEditComponent implements OnInit, PendingChangesGuard {
         });
     } else {
       return;
+    }
+  }
+
+  onReset(): void {
+    if (this.employeeForm.dirty) {
+      const isReset = confirm(
+        'WARNING: You have unsaved changes. Press Cancel to go back and save these changes, or OK to lose these changes.'
+      );
+
+      if (isReset) {
+        this.formGroupDirective.resetForm(this.employee);
+      }
     }
   }
 

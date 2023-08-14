@@ -43,6 +43,7 @@ namespace EmployeeApp.Service.Services
                 newCompany.Id = Guid.NewGuid();
 
                 await _unitOfWork.CompanyRepository.InsertAsync(newCompany);
+                await _unitOfWork.SaveAllAsync();
                 return newCompany.Id;
             }
             catch (Exception)
@@ -60,6 +61,7 @@ namespace EmployeeApp.Service.Services
                 _mapper.Map<UpdateCompanyDto, Company>(updateCompanyDto, company);
 
                 await _unitOfWork.CompanyRepository.UpdateAsync(company);
+                await _unitOfWork.SaveAllAsync();
                 return _mapper.Map<CompanyDto>(company);
             }
             catch (Exception)
@@ -73,6 +75,7 @@ namespace EmployeeApp.Service.Services
             try
             {
                 await _unitOfWork.CompanyRepository.DeleteAsync(id);
+                await _unitOfWork.SaveAllAsync();
                 return true;
             }
             catch (Exception)

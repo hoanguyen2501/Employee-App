@@ -26,6 +26,10 @@ import { EmployeeListComponent } from './components/employee/employee-list/emplo
 import { SideNavComponent } from './components/navigation/side-nav/side-nav.component';
 import { EmployeeEditComponent } from './components/employee/employee-edit/employee-edit.component';
 import { EmployeeDetailsComponent } from './components/employee/employee-details/employee-details.component';
+import { CompanyListComponent } from './components/company/company-list/company-list.component';
+import { CompanyAddComponent } from './components/company/company-add/company-add.component';
+import { CompanyEditComponent } from './components/company/company-edit/company-edit.component';
+import { CompanyDetailsComponent } from './components/company/company-details/company-details.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +39,10 @@ import { EmployeeDetailsComponent } from './components/employee/employee-details
     EmployeeAddComponent,
     EmployeeEditComponent,
     EmployeeDetailsComponent,
+    CompanyListComponent,
+    CompanyAddComponent,
+    CompanyEditComponent,
+    CompanyDetailsComponent,
   ],
   imports: [
     BrowserModule,

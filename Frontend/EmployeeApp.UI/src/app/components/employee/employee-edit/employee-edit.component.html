@@ -3,8 +3,13 @@
     <mat-card-title class="content-title"
       >Edit employee information</mat-card-title
     >
-    <form [formGroup]="employeeForm" novalidate (ngSubmit)="onSubmit()">
-      <mat-card class="employee-form-car shadow bg-body rounded">
+    <form
+      [formGroup]="employeeForm"
+      novalidate
+      (ngSubmit)="onSubmit()"
+      *ngIf="employee"
+    >
+      <mat-card class=".company-form-card shadow bg-body rounded">
         <mat-card-content class="fs-5">
           <div class="row">
             <div class="col">
@@ -175,7 +180,13 @@
           >
             Submit
           </button>
-          <button mat-raised-button color="primary" type="button" color="warn">
+          <button
+            mat-raised-button
+            color="primary"
+            type="button"
+            color="warn"
+            (click)="onReset()"
+          >
             Cancel
           </button>
         </mat-card-actions>
