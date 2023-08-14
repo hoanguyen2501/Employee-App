@@ -40,7 +40,8 @@ namespace EmployeeApp.Api.Controllers
             if (employeeId == null)
                 return BadRequest("An error occurred during creating");
 
-            return Ok(employeeId);
+            var newEmployee = await _employeeService.GetEmployeeByIdAsync(employeeId.Value);
+            return CreatedAtAction(nameof(GetEmployeeById), newEmployee, new { id = employeeId });
         }
 
         [HttpPut("edit/{id}")]

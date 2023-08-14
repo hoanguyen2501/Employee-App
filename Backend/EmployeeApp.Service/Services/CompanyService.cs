@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using EmployeeApp.Domain.Entities;
-using EmployeeApp.Domain.Repositories;
+using EmployeeApp.Domain.UOW;
 using EmployeeApp.Service.DTOs.Company;
 using EmployeeApp.Service.Interfaces;
 using EmployeeApp.Utils.Validation;
@@ -9,18 +9,18 @@ namespace EmployeeApp.Service.Services
 {
     public class CompanyService : ICompanyService
     {
-        private readonly ICompanyRepository _companyRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public CompanyService(ICompanyRepository companyRepository, IMapper mapper)
+        public CompanyService(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _companyRepository = companyRepository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
         public async Task<List<CompanyDto>> GetCompaniesAsync()
         {
-            var companies = await _companyRepository.GetCompanies();
+            var companies = await _unitOfWork.CompanyRepository.QueryAllAsync();
             var companiesToReturn = _mapper.Map<List<CompanyDto>>(companies);
 
             return companiesToReturn;
@@ -28,7 +28,7 @@ namespace EmployeeApp.Service.Services
 
         public async Task<CompanyDto> GetCompanyByIdAsync(Guid id)
         {
-            var company = await _companyRepository.GetCompanyById(id);
+            var company = await _unitOfWork.CompanyRepository.QueryByIdAsync(id);
             var companyToReturn = _mapper.Map<CompanyDto>(company);
 
             return companyToReturn;
@@ -42,10 +42,7 @@ namespace EmployeeApp.Service.Services
                 var newCompany = _mapper.Map<Company>(createCompanyDto);
                 newCompany.Id = Guid.NewGuid();
 
-                var isCreated = await _companyRepository.Create(newCompany);
-                if (!isCreated)
-                    return null;
-
+                await _unitOfWork.CompanyRepository.InsertAsync(newCompany);
                 return newCompany.Id;
             }
             catch (Exception)
@@ -59,10 +56,10 @@ namespace EmployeeApp.Service.Services
             try
             {
                 Validation.TrimStringProperies(updateCompanyDto);
-                var company = await _companyRepository.GetCompanyById(id);
+                var company = await _unitOfWork.CompanyRepository.QueryByIdAsync(id);
                 _mapper.Map<UpdateCompanyDto, Company>(updateCompanyDto, company);
 
-                await _companyRepository.Update(company);
+                await _unitOfWork.CompanyRepository.UpdateAsync(company);
                 return _mapper.Map<CompanyDto>(company);
             }
             catch (Exception)
@@ -75,10 +72,7 @@ namespace EmployeeApp.Service.Services
         {
             try
             {
-                var company = await _companyRepository.GetCompanyById(id);
-                var updatedCompany = _mapper.Map<Company>(company);
-
-                await _companyRepository.Delete(updatedCompany);
+                await _unitOfWork.CompanyRepository.DeleteAsync(id);
                 return true;
             }
             catch (Exception)

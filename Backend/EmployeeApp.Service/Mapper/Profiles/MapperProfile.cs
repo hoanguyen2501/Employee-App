@@ -15,15 +15,7 @@ namespace EmployeeApp.Service.Mapper.Profiles
             CreateMap<CreateCompanyDto, Company>();
             CreateMap<UpdateCompanyDto, Company>();
 
-            CreateMap<Employee, EmployeeDto>()
-                .ForMember(dest => dest.FullName, opts =>
-                {
-                    opts.MapFrom(src => $"{src.FirstName} {src.LastName}");
-                })
-                .ForMember(dest => dest.CompanyName, opts =>
-                {
-                    opts.MapFrom(src => src.Company.CompanyName);
-                });
+            CreateMap<Employee, EmployeeDto>().ReverseMap();
             CreateMap<CreateEmployeeDto, Employee>();
             CreateMap<UpdateEmployeeDto, Employee>();
         }

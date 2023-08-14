@@ -3,7 +3,8 @@ namespace EmployeeApp.Service.DTOs.Employee
     public class EmployeeDto
     {
         public Guid Id { get; set; }
-        public string FullName { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
         public DateTime DateOfBirth { get; set; }
         public bool Gender { get; set; }
         public string Address { get; set; }
@@ -13,6 +14,6 @@ namespace EmployeeApp.Service.DTOs.Employee
         public string PhoneNumber { get; set; }
         public string ImageUrl { get; set; }
         public DateTime HiredAt { get; set; }
-        public string CompanyName { get; set; }
+        public Guid? CompanyId { get; set; }
     }
 }

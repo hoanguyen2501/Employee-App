@@ -11,7 +11,7 @@ namespace EmployeeApp.Service.DTOs.Employee
         public string Country { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
-        public string ImageUrl { get; set; }
+        public string ImageUrl { get; set; } = "./assets/user.png";
         public Guid? CompanyId { get; set; }
     }
 }

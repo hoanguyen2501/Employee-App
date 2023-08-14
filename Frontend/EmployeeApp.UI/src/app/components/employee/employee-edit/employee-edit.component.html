@@ -1,0 +1,185 @@
+<ng-container>
+  <div class="content">
+    <mat-card-title class="content-title"
+      >Edit employee information</mat-card-title
+    >
+    <form [formGroup]="employeeForm" novalidate (ngSubmit)="onSubmit()">
+      <mat-card class="employee-form-car shadow bg-body rounded">
+        <mat-card-content class="fs-5">
+          <div class="row">
+            <div class="col">
+              <mat-form-field class="full-width">
+                <mat-select placeholder="Company" formControlName="companyId">
+                  <mat-option
+                    *ngFor="let company of companies"
+                    [value]="company.id"
+                  >
+                    {{ company.companyName }}
+                  </mat-option>
+                </mat-select>
+                <mat-error
+                  *ngIf="
+                    employeeForm.controls['companyId'].hasError('required')
+                  "
+                >
+                  Company is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <mat-form-field class="full-width">
+                <input
+                  matInput
+                  placeholder="First name"
+                  formControlName="firstName"
+                />
+                <mat-error
+                  *ngIf="
+                    employeeForm.controls['firstName'].hasError('required')
+                  "
+                >
+                  First name is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field class="full-width">
+                <input
+                  matInput
+                  placeholder="Last name"
+                  formControlName="lastName"
+                />
+                <mat-error
+                  *ngIf="employeeForm.controls['lastName'].hasError('required')"
+                >
+                  Last name is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <mat-form-field class="full-width">
+                <mat-select placeholder="Gender" formControlName="gender">
+                  <mat-option
+                    *ngFor="let gender of genders"
+                    [value]="gender.value"
+                  >
+                    {{ gender.title }}
+                  </mat-option>
+                </mat-select>
+                <mat-error
+                  *ngIf="employeeForm.controls['country'].hasError('required')"
+                >
+                  Gender is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field class="full-width">
+                <mat-label>Date of Birth</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="picker"
+                  placeholder="Date of Birth"
+                  formControlName="dateOfBirth"
+                />
+                <mat-hint>MM/DD/YYYY</mat-hint>
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <mat-form-field class="full-width">
+                <input
+                  matInput
+                  placeholder="Address"
+                  formControlName="address"
+                />
+                <mat-error
+                  *ngIf="employeeForm.controls['address'].hasError('required')"
+                >
+                  Address is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <mat-form-field class="full-width">
+                <input matInput placeholder="City" formControlName="city" />
+                <mat-error
+                  *ngIf="employeeForm.controls['city'].hasError('required')"
+                >
+                  City is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field class="full-width">
+                <input
+                  matInput
+                  placeholder="Country"
+                  formControlName="country"
+                />
+                <mat-error
+                  *ngIf="employeeForm.controls['country'].hasError('required')"
+                >
+                  Country is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <mat-form-field class="full-width">
+                <input matInput placeholder="Email" formControlName="email" />
+                <mat-error
+                  *ngIf="employeeForm.controls['email'].hasError('required')"
+                >
+                  Email is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field class="full-width">
+                <input
+                  matInput
+                  placeholder="Phone number"
+                  formControlName="phoneNumber"
+                />
+                <mat-error
+                  *ngIf="
+                    employeeForm.controls['phoneNumber'].hasError('required')
+                  "
+                >
+                  Phone number is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="!(employeeForm.dirty && employeeForm.valid)"
+          >
+            Submit
+          </button>
+          <button mat-raised-button color="primary" type="button" color="warn">
+            Cancel
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </form>
+  </div>
+</ng-container>

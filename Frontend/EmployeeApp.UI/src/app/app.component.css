@@ -1,0 +1,6 @@
+:host ::ng-deep .content {
+  padding: 20px;
+}
+:host ::ng-deep .content-title {
+  margin-bottom: 20px;
+}

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using EmployeeApp.Domain.Entities;
-using EmployeeApp.Domain.Repositories;
+using EmployeeApp.Domain.UOW;
 using EmployeeApp.Service.DTOs.Employee;
 using EmployeeApp.Service.Interfaces;
 using EmployeeApp.Utils.Validation;
@@ -9,18 +9,18 @@ namespace EmployeeApp.Service.Services
 {
     public class EmployeeService : IEmployeeService
     {
-        private readonly IEmployeeRepository _employeeRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public EmployeeService(IEmployeeRepository employeeRepository, IMapper mapper)
+        public EmployeeService(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _employeeRepository = employeeRepository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
         public async Task<List<EmployeeDto>> GetEmployeesAsync()
         {
-            var employees = await _employeeRepository.GetEmployees();
+            var employees = await _unitOfWork.EmployeeRepository.QueryAllAsync();
             var employeesToReturn = _mapper.Map<List<EmployeeDto>>(employees);
 
             return employeesToReturn;
@@ -28,7 +28,7 @@ namespace EmployeeApp.Service.Services
 
         public async Task<EmployeeDto> GetEmployeeByIdAsync(Guid id)
         {
-            var employee = await _employeeRepository.GetEmployeeById(id);
+            var employee = await _unitOfWork.EmployeeRepository.QueryByIdAsync(id);
             var employeeToReturn = _mapper.Map<EmployeeDto>(employee);
 
             return employeeToReturn;
@@ -42,9 +42,8 @@ namespace EmployeeApp.Service.Services
                 var newEmployee = _mapper.Map<Employee>(createEmployeeDto);
                 newEmployee.Id = Guid.NewGuid();
 
-                var isCreated = await _employeeRepository.Create(newEmployee);
-                if (!isCreated)
-                    return null;
+                await _unitOfWork.EmployeeRepository.InsertAsync(newEmployee);
+                await _unitOfWork.SaveAllAsync();
 
                 return newEmployee.Id;
             }
@@ -59,10 +58,11 @@ namespace EmployeeApp.Service.Services
             try
             {
                 Validation.TrimStringProperies(updateEmployeeDto);
-                var employee = await _employeeRepository.GetEmployeeById(id);
+                var employee = await _unitOfWork.EmployeeRepository.QueryByIdAsync(id);
                 _mapper.Map<UpdateEmployeeDto, Employee>(updateEmployeeDto, employee);
 
-                await _employeeRepository.Update(employee);
+                await _unitOfWork.EmployeeRepository.UpdateAsync(employee);
+                await _unitOfWork.SaveAllAsync();
                 return _mapper.Map<EmployeeDto>(employee);
             }
             catch (Exception)
@@ -75,10 +75,8 @@ namespace EmployeeApp.Service.Services
         {
             try
             {
-                var employee = await _employeeRepository.GetEmployeeById(id);
-                var updatedEmployee = _mapper.Map<Employee>(employee);
-
-                await _employeeRepository.Delete(updatedEmployee);
+                await _unitOfWork.EmployeeRepository.DeleteAsync(id);
+                await _unitOfWork.SaveAllAsync();
                 return true;
             }
             catch (Exception)

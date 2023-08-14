@@ -1,0 +1,30 @@
+.full-width {
+  width: 100%;
+}
+
+.employee-form-card {
+  min-width: 120px;
+  margin-top: 24px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+  border-radius: 12px;
+  padding: 16px 40px;
+}
+
+.mat-radio-button {
+  display: block;
+  margin: 5px 0;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.col {
+  flex: 1;
+  margin-right: 20px;
+}
+
+.col:last-child {
+  margin-right: 0;
+}

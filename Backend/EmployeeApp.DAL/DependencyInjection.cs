@@ -1,5 +1,5 @@
-﻿using EmployeeApp.DAL.Repositories;
-using EmployeeApp.Domain.Repositories;
+﻿using EmployeeApp.DAL.UOW;
+using EmployeeApp.Domain.UOW;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EmployeeApp.DAL
@@ -9,8 +9,7 @@ namespace EmployeeApp.DAL
         public static IServiceCollection AddRepositoryCollection(this IServiceCollection services)
         {
             // DI of Repository
-            services.AddScoped<ICompanyRepository, CompanyRepository>();
-            services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;
         }
