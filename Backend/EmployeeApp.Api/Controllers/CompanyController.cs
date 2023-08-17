@@ -1,9 +1,11 @@
 using EmployeeApp.Service.DTOs.Company;
 using EmployeeApp.Service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeeApp.Api.Controllers
 {
+    [Authorize]
     public class CompanyController : BaseApiController
     {
         private readonly ICompanyService _companyService;

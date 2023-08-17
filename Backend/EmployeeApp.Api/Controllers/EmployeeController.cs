@@ -1,9 +1,11 @@
 using EmployeeApp.Service.DTOs.Employee;
 using EmployeeApp.Service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeeApp.Api.Controllers
 {
+    [Authorize]
     public class EmployeeController : BaseApiController
     {
         private readonly IEmployeeService _employeeService;
@@ -19,6 +21,8 @@ namespace EmployeeApp.Api.Controllers
             var companies = await _employeeService.GetEmployeesAsync();
             if (companies == null)
                 return BadRequest();
+            else if (companies.Count == 0)
+                return NotFound();
 
             return Ok(companies);
         }
@@ -28,7 +32,7 @@ namespace EmployeeApp.Api.Controllers
         {
             var employee = await _employeeService.GetEmployeeByIdAsync(id);
             if (employee == null)
-                return BadRequest();
+                return NotFound();
 
             return Ok(employee);
         }

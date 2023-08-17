@@ -4,10 +4,10 @@
 
 .employee-form-card {
   min-width: 120px;
-  margin-top: 24px;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
   border-radius: 12px;
-  padding: 16px 40px;
+  padding: 24px;
+  margin: 20px auto;
 }
 
 .mat-radio-button {

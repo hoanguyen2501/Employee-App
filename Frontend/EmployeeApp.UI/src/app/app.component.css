@@ -9,3 +9,20 @@
 ::ng-deep .mat-input-element:disabled {
   color: rgba(0, 0, 0, 0.75);
 }
+
+::ng-deep .error-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+::ng-deep .error-content__status-code {
+  font-size: 80px;
+  line-height: 100%;
+}
+
+::ng-deep .error-content__message {
+  font-size: 20px;
+  line-height: 100%;
+}

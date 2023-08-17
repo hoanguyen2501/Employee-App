@@ -7,9 +7,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.9" />
+    <Compile Remove="Error\**" />
+    <Compile Remove="Middlewares - Copy\**" />
+    <Content Remove="Error\**" />
+    <Content Remove="Middlewares - Copy\**" />
+    <EmbeddedResource Remove="Error\**" />
+    <EmbeddedResource Remove="Middlewares - Copy\**" />
+    <None Remove="Error\**" />
+    <None Remove="Middlewares - Copy\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.9" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,0 +1,53 @@
+<div class="login-page">
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <mat-card class="login-form shadow-lg bg-body rounded" color="primary">
+      <mat-card-title class="login-form__title fs-2 text-center pb-2"
+        >Login</mat-card-title
+      >
+      <mat-card-content class="login-form__content fs-5">
+        <div class="row">
+          <div class="col">
+            <mat-form-field class="full-width">
+              <input
+                matInput
+                placeholder="Username"
+                formControlName="username"
+              />
+              <mat-error
+                *ngIf="loginForm.controls['username'].hasError('required')"
+              >
+                Username is <strong>required</strong>
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <mat-form-field class="full-width">
+              <input
+                matInput
+                placeholder="Password"
+                formControlName="password"
+                type="password"
+              />
+              <mat-error
+                *ngIf="loginForm.controls['password'].hasError('required')"
+              >
+                Password is <strong>required</strong>
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          class="login-form__submit"
+          [disabled]="loginForm.invalid"
+        >
+          Login
+        </button>
+      </mat-card-content>
+    </mat-card>
+  </form>
+</div>

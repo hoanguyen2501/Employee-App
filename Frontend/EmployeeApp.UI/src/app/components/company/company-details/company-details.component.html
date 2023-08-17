@@ -1,6 +1,14 @@
 <ng-container>
   <div class="content">
-    <mat-card-title class="content-title">Company information</mat-card-title>
+    <mat-card-title class="content-title">Company information</mat-card-title
+    ><button
+      mat-raised-button
+      color="primary"
+      type="button"
+      routerLink="/company"
+    >
+      <mat-icon>arrow_back</mat-icon>
+    </button>
     <form [formGroup]="companyForm" novalidate *ngIf="company">
       <mat-card class="company-form-card shadow bg-body rounded">
         <mat-card-content class="fs-5">
@@ -112,20 +120,11 @@
         ><mat-card-actions>
           <button
             mat-raised-button
-            color="primary"
+            color="accent"
             type="button"
             [routerLink]="['/company', 'edit', company.id]"
           >
-            Goto Edit
-          </button>
-          <button
-            mat-raised-button
-            color="primary"
-            type="button"
-            color="warn"
-            routerLink="/company"
-          >
-            Back to list
+            Edit
           </button>
         </mat-card-actions>
       </mat-card>

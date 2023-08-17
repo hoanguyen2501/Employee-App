@@ -1,6 +1,5 @@
 ﻿using EmployeeApp.DAL.DataAccess;
 using EmployeeApp.DAL.Repositories;
-using EmployeeApp.Domain.Entities;
 using EmployeeApp.Domain.Repositories;
 using EmployeeApp.Domain.UOW;
 using System;
@@ -11,8 +10,9 @@ namespace EmployeeApp.DAL.UOW
     public class UnitOfWork : IUnitOfWork
     {
         private readonly EmployeeAppDbContext _dbContext;
-        public IGenericRepository<Company> _companyRepository;
-        public IGenericRepository<Employee> _employeeRepository;
+        public IAccountRepository _accountRepository;
+        public ICompanyRepository _companyRepository;
+        public IEmployeeRepository _employeeRepository;
         private bool disposed = false;
 
         public UnitOfWork(EmployeeAppDbContext dbContext)
@@ -20,20 +20,29 @@ namespace EmployeeApp.DAL.UOW
             _dbContext = dbContext;
         }
 
-        public IGenericRepository<Company> CompanyRepository
+        public IAccountRepository AccountRepository
         {
             get
             {
-                _companyRepository ??= new GenericRepository<Company>(_dbContext);
+                _accountRepository ??= new AccountRepository(_dbContext);
+                return _accountRepository;
+            }
+        }
+
+        public ICompanyRepository CompanyRepository
+        {
+            get
+            {
+                _companyRepository ??= new CompanyRepository(_dbContext);
                 return _companyRepository;
             }
         }
 
-        public IGenericRepository<Employee> EmployeeRepository
+        public IEmployeeRepository EmployeeRepository
         {
             get
             {
-                _employeeRepository ??= new GenericRepository<Employee>(_dbContext);
+                _employeeRepository ??= new EmployeeRepository(_dbContext);
                 return _employeeRepository;
             }
         }

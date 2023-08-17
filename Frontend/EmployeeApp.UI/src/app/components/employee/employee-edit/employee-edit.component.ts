@@ -108,12 +108,13 @@ export class EmployeeEditComponent implements OnInit, PendingChangesGuard {
   }
 
   onReset(): void {
-    if (this.employeeForm.dirty) {
+    if (this.employeeForm.dirty || this.employeeForm.touched) {
       const isReset = confirm(
         'WARNING: You have unsaved changes. Press Cancel to go back and save these changes, or OK to lose these changes.'
       );
 
       if (isReset) {
+        this.employeeForm.reset();
         this.formGroupDirective.resetForm(this.employee);
       }
     }

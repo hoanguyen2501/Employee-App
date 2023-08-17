@@ -3,140 +3,151 @@
     <mat-card-title class="content-title"
       >Edit company information</mat-card-title
     >
-    <form
-      [formGroup]="companyForm"
-      novalidate
-      (ngSubmit)="onSubmit()"
-      *ngIf="company"
+    <ng-container *ngIf="company">
+      <div class="btn-action">
+        <button
+          mat-raised-button
+          color="primary"
+          type="button"
+          routerLink="/company"
+        >
+          List
+        </button>
+
+        <button
+          class="ms-2"
+          mat-raised-button
+          color="primary"
+          type="button"
+          [routerLink]="['/company', company.id]"
+        >
+          Details
+        </button>
+      </div>
+      <form [formGroup]="companyForm" novalidate (ngSubmit)="onSubmit()">
+        <mat-card class="company-form-card shadow bg-body rounded">
+          <mat-card-content class="fs-5">
+            <div class="row">
+              <div class="col">
+                <mat-form-field class="full-width">
+                  <input
+                    matInput
+                    placeholder="Company name"
+                    formControlName="companyName"
+                  />
+                  <mat-error
+                    *ngIf="
+                      companyForm.controls['companyName'].hasError('required')
+                    "
+                  >
+                    Company name is <strong>required</strong>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col">
+                <mat-form-field class="full-width">
+                  <mat-label>Established at</mat-label>
+                  <input
+                    matInput
+                    [matDatepicker]="picker"
+                    placeholder="Established at"
+                    formControlName="establishedAt"
+                  />
+                  <mat-hint>MM/DD/YYYY</mat-hint>
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="picker"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <mat-form-field class="full-width">
+                  <input
+                    matInput
+                    placeholder="Address"
+                    formControlName="address"
+                  />
+                  <mat-error
+                    *ngIf="companyForm.controls['address'].hasError('required')"
+                  >
+                    Address is <strong>required</strong>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <mat-form-field class="full-width">
+                  <input matInput placeholder="City" formControlName="city" />
+                  <mat-error
+                    *ngIf="companyForm.controls['city'].hasError('required')"
+                  >
+                    City is <strong>required</strong>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col">
+                <mat-form-field class="full-width">
+                  <input
+                    matInput
+                    placeholder="Country"
+                    formControlName="country"
+                  />
+                  <mat-error
+                    *ngIf="companyForm.controls['country'].hasError('required')"
+                  >
+                    Country is <strong>required</strong>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <mat-form-field class="full-width">
+                  <input matInput placeholder="Email" formControlName="email" />
+                  <mat-error
+                    *ngIf="companyForm.controls['email'].hasError('required')"
+                  >
+                    Email is <strong>required</strong>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col">
+                <mat-form-field class="full-width">
+                  <input
+                    matInput
+                    placeholder="Phone number"
+                    formControlName="phoneNumber"
+                  />
+                  <mat-error
+                    *ngIf="
+                      companyForm.controls['phoneNumber'].hasError('required')
+                    "
+                  >
+                    Phone number is <strong>required</strong>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </mat-card-content>
+          <mat-card-actions>
+            <button
+              mat-raised-button
+              color="accent"
+              type="submit"
+              [disabled]="!(companyForm.dirty && companyForm.valid)"
+            >
+              Submit
+            </button>
+            <button mat-raised-button type="button" (click)="onReset()">
+              Cancel
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </form></ng-container
     >
-      <mat-card class="company-form-card shadow bg-body rounded">
-        <mat-card-content class="fs-5">
-          <div class="row">
-            <div class="col">
-              <mat-form-field class="full-width">
-                <input
-                  matInput
-                  placeholder="Company name"
-                  formControlName="companyName"
-                />
-                <mat-error
-                  *ngIf="
-                    companyForm.controls['companyName'].hasError('required')
-                  "
-                >
-                  Company name is <strong>required</strong>
-                </mat-error>
-              </mat-form-field>
-            </div>
-            <div class="col">
-              <mat-form-field class="full-width">
-                <mat-label>Established at</mat-label>
-                <input
-                  matInput
-                  [matDatepicker]="picker"
-                  placeholder="Established at"
-                  formControlName="establishedAt"
-                />
-                <mat-hint>MM/DD/YYYY</mat-hint>
-                <mat-datepicker-toggle
-                  matSuffix
-                  [for]="picker"
-                ></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-              </mat-form-field>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col">
-              <mat-form-field class="full-width">
-                <input
-                  matInput
-                  placeholder="Address"
-                  formControlName="address"
-                />
-                <mat-error
-                  *ngIf="companyForm.controls['address'].hasError('required')"
-                >
-                  Address is <strong>required</strong>
-                </mat-error>
-              </mat-form-field>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col">
-              <mat-form-field class="full-width">
-                <input matInput placeholder="City" formControlName="city" />
-                <mat-error
-                  *ngIf="companyForm.controls['city'].hasError('required')"
-                >
-                  City is <strong>required</strong>
-                </mat-error>
-              </mat-form-field>
-            </div>
-            <div class="col">
-              <mat-form-field class="full-width">
-                <input
-                  matInput
-                  placeholder="Country"
-                  formControlName="country"
-                />
-                <mat-error
-                  *ngIf="companyForm.controls['country'].hasError('required')"
-                >
-                  Country is <strong>required</strong>
-                </mat-error>
-              </mat-form-field>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col">
-              <mat-form-field class="full-width">
-                <input matInput placeholder="Email" formControlName="email" />
-                <mat-error
-                  *ngIf="companyForm.controls['email'].hasError('required')"
-                >
-                  Email is <strong>required</strong>
-                </mat-error>
-              </mat-form-field>
-            </div>
-            <div class="col">
-              <mat-form-field class="full-width">
-                <input
-                  matInput
-                  placeholder="Phone number"
-                  formControlName="phoneNumber"
-                />
-                <mat-error
-                  *ngIf="
-                    companyForm.controls['phoneNumber'].hasError('required')
-                  "
-                >
-                  Phone number is <strong>required</strong>
-                </mat-error>
-              </mat-form-field>
-            </div>
-          </div>
-        </mat-card-content>
-        <mat-card-actions>
-          <button
-            mat-raised-button
-            color="primary"
-            type="submit"
-            [disabled]="!(companyForm.dirty && companyForm.valid)"
-          >
-            Submit
-          </button>
-          <button
-            mat-raised-button
-            color="primary"
-            type="button"
-            color="warn"
-            (click)="onReset()"
-          >
-            Cancel
-          </button>
-        </mat-card-actions>
-      </mat-card>
-    </form>
   </div>
 </ng-container>

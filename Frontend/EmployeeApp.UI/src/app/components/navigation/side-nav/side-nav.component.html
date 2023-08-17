@@ -4,7 +4,19 @@
       <button mat-icon-button (click)="snav.toggle()">
         <mat-icon>menu</mat-icon>
       </button>
-      <h1 class="nav-app-name">Responsive App</h1>
+      <h1 class="nav-app-name" role="button" routerLink="">Employee App</h1>
+      <span class="nav-spacer"></span>
+      <button mat-button [matMenuTriggerFor]="menu" class="fs-6 me-5">
+        Admin
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item>
+          <mat-icon class="me-2">person</mat-icon> Profile
+        </button>
+        <button mat-menu-item (click)="logout()">
+          <mat-icon class="me-2">logout</mat-icon> Logout
+        </button>
+      </mat-menu>
     </mat-toolbar>
 
     <mat-sidenav-container
@@ -29,8 +41,8 @@
         </mat-nav-list>
       </mat-sidenav>
 
-      <mat-sidenav-content
-        ><router-outlet></router-outlet>
+      <mat-sidenav-content>
+        <router-outlet></router-outlet>
       </mat-sidenav-content>
     </mat-sidenav-container>
   </div>

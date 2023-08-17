@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Employee } from 'src/app/models/employee';
 import { CompanyService } from 'src/app/services/company.service';
@@ -28,7 +28,8 @@ export class EmployeeDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private employeeService: EmployeeService,
     private companyService: CompanyService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -85,8 +86,11 @@ export class EmployeeDetailsComponent implements OnInit {
       next: (employee) => {
         this.employee = employee;
         this.updateEditForm(employee);
+        console.log(employee);
       },
-      error: (error) => console.log(error),
+      error: (error) => {
+        console.log(error);
+      },
     });
   }
 

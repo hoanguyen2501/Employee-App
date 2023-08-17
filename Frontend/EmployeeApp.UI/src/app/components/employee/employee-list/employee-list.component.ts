@@ -66,7 +66,7 @@ export class EmployeeListComponent implements OnInit, AfterViewInit {
   }
 
   gotoDetail(employeeId: string) {
-    this.router.navigateByUrl(`/employee/${employeeId}`);
+    this.router.navigate(['/employee', employeeId]);
   }
 
   onAction(action: string, employeeId: string, $event: any) {

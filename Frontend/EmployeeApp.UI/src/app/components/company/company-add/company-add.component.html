@@ -1,6 +1,14 @@
 <ng-container>
   <div class="content">
     <mat-card-title class="content-title">Company Information</mat-card-title>
+    <button
+      mat-raised-button
+      color="primary"
+      type="button"
+      routerLink="/company"
+    >
+      <mat-icon>arrow_back</mat-icon>
+    </button>
     <form [formGroup]="companyForm" novalidate (ngSubmit)="onSubmit()">
       <mat-card class="company-form-card shadow bg-body rounded">
         <mat-card-content class="fs-5">
@@ -113,19 +121,13 @@
         <mat-card-actions>
           <button
             mat-raised-button
-            color="primary"
+            color="accent"
             type="submit"
             [disabled]="companyForm.dirty"
           >
             Submit
           </button>
-          <button
-            mat-raised-button
-            color="primary"
-            type="button"
-            color="warn"
-            (click)="onReset()"
-          >
+          <button mat-raised-button type="button" (click)="onReset()">
             Cancel
           </button>
         </mat-card-actions>

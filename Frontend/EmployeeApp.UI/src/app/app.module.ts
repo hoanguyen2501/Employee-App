@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -11,6 +11,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
@@ -21,15 +22,22 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { EmployeeAddComponent } from './components/employee/employee-add/employee-add.component';
-import { EmployeeListComponent } from './components/employee/employee-list/employee-list.component';
-import { SideNavComponent } from './components/navigation/side-nav/side-nav.component';
-import { EmployeeEditComponent } from './components/employee/employee-edit/employee-edit.component';
-import { EmployeeDetailsComponent } from './components/employee/employee-details/employee-details.component';
-import { CompanyListComponent } from './components/company/company-list/company-list.component';
+import { LoginComponent } from './components/auth/login/login.component';
 import { CompanyAddComponent } from './components/company/company-add/company-add.component';
-import { CompanyEditComponent } from './components/company/company-edit/company-edit.component';
 import { CompanyDetailsComponent } from './components/company/company-details/company-details.component';
+import { CompanyEditComponent } from './components/company/company-edit/company-edit.component';
+import { CompanyListComponent } from './components/company/company-list/company-list.component';
+import { EmployeeAddComponent } from './components/employee/employee-add/employee-add.component';
+import { EmployeeDetailsComponent } from './components/employee/employee-details/employee-details.component';
+import { EmployeeEditComponent } from './components/employee/employee-edit/employee-edit.component';
+import { EmployeeListComponent } from './components/employee/employee-list/employee-list.component';
+import { InternalServerErrorComponent } from './components/errors/internal-server-error/internal-server-error.component';
+import { NotFoundComponent } from './components/errors/not-found/not-found.component';
+import { HomeComponent } from './components/home/home.component';
+import { SideNavComponent } from './components/navigation/side-nav/side-nav.component';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { ErrorInterceptor } from './interceptors/error.interceptor';
+import { BadRequestComponent } from './components/errors/bad-request/bad-request.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +51,11 @@ import { CompanyDetailsComponent } from './components/company/company-details/co
     CompanyAddComponent,
     CompanyEditComponent,
     CompanyDetailsComponent,
+    NotFoundComponent,
+    InternalServerErrorComponent,
+    HomeComponent,
+    LoginComponent,
+    BadRequestComponent,
   ],
   imports: [
     BrowserModule,
@@ -71,9 +84,21 @@ import { CompanyDetailsComponent } from './components/company/company-details/co
     MatRadioModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatMenuModule,
     ReactiveFormsModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ErrorInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

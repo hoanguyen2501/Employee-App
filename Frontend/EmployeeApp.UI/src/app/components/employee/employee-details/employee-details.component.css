@@ -4,6 +4,9 @@
 
 .employee-form-card {
   min-width: 120px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+  border-radius: 12px;
+  padding: 24px;
   margin: 20px auto;
 }
 

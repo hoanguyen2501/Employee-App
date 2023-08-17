@@ -40,7 +40,6 @@ namespace EmployeeApp.Service.Services
             {
                 Validation.TrimStringProperies(createEmployeeDto);
                 var newEmployee = _mapper.Map<Employee>(createEmployeeDto);
-                newEmployee.Id = Guid.NewGuid();
 
                 await _unitOfWork.EmployeeRepository.InsertAsync(newEmployee);
                 await _unitOfWork.SaveAllAsync();
@@ -75,6 +74,10 @@ namespace EmployeeApp.Service.Services
         {
             try
             {
+                var employee = _unitOfWork.EmployeeRepository.QueryByIdAsync(id);
+                if (employee == null)
+                    return false;
+
                 await _unitOfWork.EmployeeRepository.DeleteAsync(id);
                 await _unitOfWork.SaveAllAsync();
                 return true;
