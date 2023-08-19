@@ -38,10 +38,15 @@ namespace EmployeeApp.Api.Controllers
         [HttpPost("add")]
         public async Task<ActionResult> CreateNewCompany(CreateCompanyDto createCompanyDto)
         {
-            var companyId = await _companyService.CreateCompany(createCompanyDto);
-            if (companyId == null)
-                return BadRequest("An error occurred during creating");
+            var isEmailExisted = await _companyService.CheckExistingCompanyEmail(createCompanyDto.Email);
+            if (isEmailExisted)
+                return BadRequest("Email has already taken");
 
+            var isPhoneExisted = await _companyService.CheckExistingCompanyPhone(createCompanyDto.PhoneNumber);
+            if (isPhoneExisted)
+                return BadRequest("Phone number has already taken");
+
+            var companyId = await _companyService.CreateCompany(createCompanyDto);
             return Ok(companyId);
         }
 

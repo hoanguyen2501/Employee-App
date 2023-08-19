@@ -1,60 +1,70 @@
 using EmployeeApp.Api.Extensions;
-using EmployeeApp.Api.Middlewares;
 using EmployeeApp.DAL.DataAccess;
 using EmployeeApp.DAL.DataAccess.Seeding;
 using Microsoft.EntityFrameworkCore;
+using NLog;
+using NLog.Web;
 
-var builder = WebApplication.CreateBuilder(args);
+var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
+logger.Debug("Init main");
 
-// Add services to the container.
-
-{
-    builder.Services.AddControllers();
-    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-    builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddSwaggerGen();
-
-    builder.Services.AddJwtIdentity(builder.Configuration)
-                    .AddDependencyInjection()
-                    .AddApplicationServices(builder.Configuration);
-}
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-app.UseMiddleware<ExceptionMiddleware>();
-
-app.UseCors(builder =>
-    builder.AllowAnyHeader()
-        .AllowAnyMethod()
-        .WithOrigins("http://localhost:4200"));
-
-app.UseHttpsRedirection();
-
-app.UseAuthentication();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-using var scope = app.Services.CreateScope();
-var services = scope.ServiceProvider;
 try
 {
-    var context = services.GetRequiredService<EmployeeAppDbContext>();
-    await context.Database.MigrateAsync();
-    await Seed.SeedCompanies(context);
-}
-catch (System.Exception ex)
-{
-    var logger = services.GetService<ILogger<Program>>();
-    logger.LogError(ex, "An error occurred during migration");
-}
+    var builder = WebApplication.CreateBuilder(args);
 
-app.Run();
+    // Add services to the container.
+
+    {
+
+        builder.Services.AddControllers();
+        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
+
+        // Add NLog
+        builder.Logging.ClearProviders();
+        builder.Host.UseNLog();
+
+        builder.Services.AddJwtIdentity(builder.Configuration)
+                        .AddDependencyInjection()
+                        .AddApplicationServices(builder.Configuration);
+    }
+
+    var app = builder.Build();
+
+    // Configure the HTTP request pipeline.
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
+
+    app.UseApiMiddleware();
+
+    app.MapControllers();
+
+    using var scope = app.Services.CreateScope();
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<EmployeeAppDbContext>();
+        await context.Database.MigrateAsync();
+        await Seed.SeedCompanies(context);
+    }
+    catch (Exception exception)
+    {
+        logger.Error(exception, "An error occurred during migration");
+        throw;
+    }
+
+    app.Run();
+}
+catch (Exception exception)
+{
+    logger.Error(exception, "Some errors occurred during starting program");
+    throw;
+}
+finally
+{
+    LogManager.Shutdown();
+}

@@ -2,6 +2,8 @@
 using EmployeeApp.DAL.Repositories;
 using EmployeeApp.Domain.Repositories;
 using EmployeeApp.Domain.UOW;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Threading.Tasks;
 
@@ -45,6 +47,21 @@ namespace EmployeeApp.DAL.UOW
                 _employeeRepository ??= new EmployeeRepository(_dbContext);
                 return _employeeRepository;
             }
+        }
+
+        public async Task<IDbContextTransaction> CreateTransaction()
+        {
+            return await _dbContext.Database.BeginTransactionAsync(System.Data.IsolationLevel.ReadCommitted);
+        }
+
+        public async Task Commit()
+        {
+            await _dbContext.Database.CommitTransactionAsync();
+        }
+
+        public async Task RollbackTransaction()
+        {
+            await _dbContext.Database.RollbackTransactionAsync();
         }
 
         public async Task SaveAllAsync()

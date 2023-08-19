@@ -25,7 +25,7 @@ namespace EmployeeApp.Api.Extensions
                         ValidateAudience = true,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
-                        ClockSkew = TimeSpan.Zero
+                        ClockSkew = TimeSpan.FromMinutes(1)
                     };
                 });
 

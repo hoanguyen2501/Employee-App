@@ -40,10 +40,15 @@ namespace EmployeeApp.Api.Controllers
         [HttpPost("add")]
         public async Task<ActionResult> CreateNewEmployee(CreateEmployeeDto createEmployeeDto)
         {
-            var employeeId = await _employeeService.CreateEmployee(createEmployeeDto);
-            if (employeeId == null)
-                return BadRequest("An error occurred during creating");
+            var isEmailExisted = await _employeeService.CheckExistingEmployeeEmail(createEmployeeDto.Email);
+            if (isEmailExisted)
+                return BadRequest("Email has already taken");
 
+            var isPhoneExisted = await _employeeService.CheckExistingEmployeePhone(createEmployeeDto.PhoneNumber);
+            if (isPhoneExisted)
+                return BadRequest("Phone number has already taken");
+
+            var employeeId = await _employeeService.CreateEmployee(createEmployeeDto);
             var newEmployee = await _employeeService.GetEmployeeByIdAsync(employeeId.Value);
             return CreatedAtAction(nameof(GetEmployeeById), newEmployee, new { id = employeeId });
         }

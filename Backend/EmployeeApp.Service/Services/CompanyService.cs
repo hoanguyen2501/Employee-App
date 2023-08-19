@@ -83,5 +83,15 @@ namespace EmployeeApp.Service.Services
                 return false;
             }
         }
+
+        public async Task<bool> CheckExistingCompanyEmail(string email)
+        {
+            return await _unitOfWork.CompanyRepository.QueryByConditionsAsync(cond => cond.Email == email) != null;
+        }
+
+        public async Task<bool> CheckExistingCompanyPhone(string phone)
+        {
+            return await _unitOfWork.CompanyRepository.QueryByConditionsAsync(cond => cond.PhoneNumber == phone) != null;
+        }
     }
 }

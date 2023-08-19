@@ -8,10 +8,12 @@ namespace EmployeeApp.Api.Middlewares
     {
         private readonly RequestDelegate _next;
         private readonly IHostEnvironment _env;
-        public ExceptionMiddleware(RequestDelegate next, IHostEnvironment env)
+        private readonly ILogger<ExceptionMiddleware> _logger;
+        public ExceptionMiddleware(RequestDelegate next, IHostEnvironment env, ILogger<ExceptionMiddleware> logger)
         {
             _next = next;
             _env = env;
+            _logger = logger;
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -20,14 +22,16 @@ namespace EmployeeApp.Api.Middlewares
             {
                 await _next(context);
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
+                _logger.LogCritical(exception, "Internal Server Error");
+
                 context.Response.ContentType = "application/json";
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
                 var response = _env.IsDevelopment() ?
-                    new ApiException(context.Response.StatusCode, ex.Message, ex.StackTrace?.ToString()) :
-                    new ApiException(context.Response.StatusCode, ex.Message, "Internal Server Error");
+                    new ApiException(context.Response.StatusCode, exception.Message, exception.StackTrace?.ToString()) :
+                    new ApiException(context.Response.StatusCode, exception.Message, "Internal Server Error");
 
                 var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
 

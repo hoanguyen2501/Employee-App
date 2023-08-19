@@ -36,20 +36,13 @@ namespace EmployeeApp.Service.Services
 
         public async Task<Guid?> CreateEmployee(CreateEmployeeDto createEmployeeDto)
         {
-            try
-            {
-                Validation.TrimStringProperies(createEmployeeDto);
-                var newEmployee = _mapper.Map<Employee>(createEmployeeDto);
+            Validation.TrimStringProperies(createEmployeeDto);
+            var newEmployee = _mapper.Map<Employee>(createEmployeeDto);
 
-                await _unitOfWork.EmployeeRepository.InsertAsync(newEmployee);
-                await _unitOfWork.SaveAllAsync();
+            await _unitOfWork.EmployeeRepository.InsertAsync(newEmployee);
+            await _unitOfWork.SaveAllAsync();
 
-                return newEmployee.Id;
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            return newEmployee.Id;
         }
 
         public async Task<EmployeeDto> UpdateEmployee(Guid id, UpdateEmployeeDto updateEmployeeDto)
@@ -86,6 +79,16 @@ namespace EmployeeApp.Service.Services
             {
                 return false;
             }
+        }
+
+        public async Task<bool> CheckExistingEmployeeEmail(string email)
+        {
+            return await _unitOfWork.EmployeeRepository.QueryByConditionsAsync(cond => cond.Email == email) != null;
+        }
+
+        public async Task<bool> CheckExistingEmployeePhone(string phone)
+        {
+            return await _unitOfWork.EmployeeRepository.QueryByConditionsAsync(cond => cond.PhoneNumber == phone) != null;
         }
     }
 }

@@ -1,29 +1,20 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <Nullable>disable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<Nullable>disable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Error\**" />
-    <Compile Remove="Middlewares - Copy\**" />
-    <Content Remove="Error\**" />
-    <Content Remove="Middlewares - Copy\**" />
-    <EmbeddedResource Remove="Error\**" />
-    <EmbeddedResource Remove="Middlewares - Copy\**" />
-    <None Remove="Error\**" />
-    <None Remove="Middlewares - Copy\**" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.9" />
+		<PackageReference Include="NLog" Version="5.2.3" />
+		<PackageReference Include="NLog.Web.AspNetCore" Version="5.3.3" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.9" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\EmployeeApp.Service\EmployeeApp.Service.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\EmployeeApp.Service\EmployeeApp.Service.csproj" />
+	</ItemGroup>
 
 </Project>
