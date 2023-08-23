@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" *ngIf="currentUser$ | async as user">
   <div class="nav-container" [class.nav-is-mobile]="mobileQuery.matches">
     <mat-toolbar color="primary" class="nav-toolbar">
       <button mat-icon-button (click)="snav.toggle()">
@@ -7,7 +7,7 @@
       <h1 class="nav-app-name" role="button" routerLink="">Employee App</h1>
       <span class="nav-spacer"></span>
       <button mat-button [matMenuTriggerFor]="menu" class="fs-6 me-5">
-        Admin
+        {{ user.username }}
       </button>
       <mat-menu #menu="matMenu">
         <button mat-menu-item>

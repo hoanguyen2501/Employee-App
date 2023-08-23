@@ -33,6 +33,7 @@ export class LoginComponent implements OnInit {
   onSubmit(): void {
     this.authService.login(this.loginForm.value).subscribe({
       next: (user) => {
+        this.toastr.success('Logged in successfully', 'Login');
         this.router.navigate(['']);
       },
       error: (error) => {

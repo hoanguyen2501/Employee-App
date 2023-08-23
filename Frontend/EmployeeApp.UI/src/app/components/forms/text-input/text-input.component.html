@@ -1,0 +1,25 @@
+<mat-form-field class="full-width">
+  <mat-label>{{ label }}</mat-label>
+  <input
+    matInput
+    [class.is-invalid]="control.touched && control.invalid"
+    [formControl]="control"
+    type="{{ type }}"
+  />
+  <mat-error *ngIf="control.errors?.['required']">
+    {{ label }} is <strong>required</strong>
+  </mat-error>
+  <mat-error *ngIf="control.errors?.['minlength']">
+    {{ label }} must be at least
+    <strong>{{control.errors?.['minlength'].requiredLength}}</strong>
+    characters
+  </mat-error>
+  <mat-error *ngIf="control.errors?.['maxlength']">
+    {{ label }} must be most
+    <strong>{{control.errors?.['maxlength'].requiredLength}}</strong>
+    characters
+  </mat-error>
+  <mat-error *ngIf="control.errors?.['pattern']">
+    {{ label }} is <strong>invalid</strong>
+  </mat-error>
+</mat-form-field>

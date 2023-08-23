@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
@@ -38,6 +38,9 @@ import { SideNavComponent } from './components/navigation/side-nav/side-nav.comp
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
 import { BadRequestComponent } from './components/errors/bad-request/bad-request.component';
+import { TextInputComponent } from './components/forms/text-input/text-input.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { LoadingInterceptor } from './interceptors/loading.interceptor';
 
 @NgModule({
   declarations: [
@@ -56,6 +59,7 @@ import { BadRequestComponent } from './components/errors/bad-request/bad-request
     HomeComponent,
     LoginComponent,
     BadRequestComponent,
+    TextInputComponent,
   ],
   imports: [
     BrowserModule,
@@ -86,6 +90,9 @@ import { BadRequestComponent } from './components/errors/bad-request/bad-request
     MatNativeDateModule,
     MatMenuModule,
     ReactiveFormsModule,
+    NgxSpinnerModule.forRoot({
+      type: 'ball-spin-clockwise',
+    }),
   ],
   providers: [
     {
@@ -98,7 +105,13 @@ import { BadRequestComponent } from './components/errors/bad-request/bad-request
       useClass: AuthInterceptor,
       multi: true,
     },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoadingInterceptor,
+      multi: true,
+    },
   ],
   bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AppModule {}
