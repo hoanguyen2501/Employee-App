@@ -1,5 +1,6 @@
 ﻿using EmployeeApp.DAL;
 using EmployeeApp.Service.Interfaces;
+using EmployeeApp.Service.RabbitMQ;
 using EmployeeApp.Service.Services;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,6 +18,9 @@ namespace EmployeeApp.Service
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ICompanyService, CompanyService>();
             services.AddScoped<IEmployeeService, EmployeeService>();
+
+            // DI of RabbitMQ Sender
+            services.AddScoped<IMessageSender, MessageSender>();
 
             return services;
         }

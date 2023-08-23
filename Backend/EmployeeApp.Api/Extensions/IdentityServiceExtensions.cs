@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
 
 namespace EmployeeApp.Api.Extensions
 {
@@ -8,26 +7,30 @@ namespace EmployeeApp.Api.Extensions
     {
         public static IServiceCollection AddJwtIdentity(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddAuthentication(x =>
+            services.AddAuthentication(options =>
             {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-                .AddJwtBearer(x =>
+            .AddJwtBearer(options =>
+            {
+                string keycloakServerUrl = configuration["Keycloak:auth-server-url"] + $"realms/{configuration["Keycloak:realm"]}/";
+                string clientId = configuration["Keycloak:resource"];
+                options.Authority = keycloakServerUrl;
+                options.Audience = clientId;
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    x.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidIssuer = configuration["JwtSettings:Issuer"],
-                        ValidAudience = configuration["JwtSettings:Audience"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:Key"])),
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-                        ClockSkew = TimeSpan.FromMinutes(1)
-                    };
-                });
+                    ValidIssuer = keycloakServerUrl,
+                    ValidAudiences = new List<string> { "master-realm", "account", clientId },
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                };
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = true;
+                options.Validate();
+            });
 
             services.AddAuthorization();
 

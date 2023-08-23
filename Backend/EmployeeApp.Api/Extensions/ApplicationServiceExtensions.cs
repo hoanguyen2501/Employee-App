@@ -1,6 +1,8 @@
 using EmployeeApp.DAL.DataAccess;
+using EmployeeApp.DAL.DataAccess.Seeding;
 using EmployeeApp.Service.Mapper;
 using Microsoft.EntityFrameworkCore;
+using NLog;
 
 namespace EmployeeApp.Api.Extensions
 {
@@ -10,6 +12,16 @@ namespace EmployeeApp.Api.Extensions
             this IServiceCollection services,
             IConfiguration config)
         {
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.WithOrigins("http://localhost:4200")
+                            .WithMethods("GET", "POST", "PUT", "PATCH", "DELETE")
+                            .AllowAnyHeader();
+                });
+            });
+
             services.AddDbContext<EmployeeAppDbContext>(opts =>
             {
                 string connectionString = config.GetConnectionString("EmployeeAppDatabase");
@@ -18,6 +30,25 @@ namespace EmployeeApp.Api.Extensions
 
             services.AddAutoMapper(typeof(AutoMapperConfig));
             return services;
+        }
+
+        public static async Task<WebApplication> SeedingExtensionsAsync(this WebApplication app, Logger logger)
+        {
+            using IServiceScope scope = app.Services.CreateScope();
+            IServiceProvider services = scope.ServiceProvider;
+            try
+            {
+                EmployeeAppDbContext context = services.GetRequiredService<EmployeeAppDbContext>();
+                await context.Database.MigrateAsync();
+                await Seed.SeedCompanies(context);
+            }
+            catch (Exception exception)
+            {
+                logger.Error(exception, "An error occurred during migration");
+                throw;
+            }
+
+            return app;
         }
     }
 }

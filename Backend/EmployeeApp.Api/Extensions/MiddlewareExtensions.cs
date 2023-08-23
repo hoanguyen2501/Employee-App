@@ -4,15 +4,20 @@ namespace EmployeeApp.Api.Extensions
 {
     public static class MiddlewareExtensions
     {
-        public static IApplicationBuilder UseApiMiddleware(this IApplicationBuilder app)
+        public static WebApplication UseApiMiddleware(this WebApplication app)
         {
+            // Configure the HTTP request pipeline.
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
+
+            app.UseCors();
 
             app.UseMiddleware<ExceptionMiddleware>();
 
-            app.UseCors(builder =>
-                builder.AllowAnyHeader()
-                    .AllowAnyMethod()
-                    .WithOrigins("http://localhost:4200"));
+            app.UseMiddleware<TransactionMiddleware>();
 
             app.UseHttpsRedirection();
 
@@ -20,7 +25,7 @@ namespace EmployeeApp.Api.Extensions
 
             app.UseAuthorization();
 
-            app.UseMiddleware<TransactionMiddleware>();
+            app.MapControllers();
 
             return app;
         }

@@ -26,7 +26,7 @@ namespace EmployeeApp.Api.Middlewares
                 using IDbContextTransaction transaction = await unitOfWork.CreateTransaction();
 
                 await _next(httpContext);
-                if (httpContext.Response.StatusCode == 200)
+                if (httpContext.Response.StatusCode >= 200 && httpContext.Response.StatusCode < 300)
                 {
                     await transaction.CommitAsync();
                     _logger.LogInformation("Transaction was committed successfully");

@@ -4,6 +4,7 @@ using EmployeeApp.Domain.UOW;
 using EmployeeApp.Service.DTOs.Company;
 using EmployeeApp.Service.Interfaces;
 using EmployeeApp.Utils.Validation;
+using Microsoft.Extensions.Logging;
 
 namespace EmployeeApp.Service.Services
 {
@@ -11,25 +12,27 @@ namespace EmployeeApp.Service.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ILogger<CompanyService> _logger;
 
-        public CompanyService(IUnitOfWork unitOfWork, IMapper mapper)
+        public CompanyService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<CompanyService> logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<List<CompanyDto>> GetCompaniesAsync()
         {
-            var companies = await _unitOfWork.CompanyRepository.QueryAllAsync();
-            var companiesToReturn = _mapper.Map<List<CompanyDto>>(companies);
+            IEnumerable<Company> companies = await _unitOfWork.CompanyRepository.QueryAllAsync();
+            List<CompanyDto> companiesToReturn = _mapper.Map<List<CompanyDto>>(companies);
 
             return companiesToReturn;
         }
 
         public async Task<CompanyDto> GetCompanyByIdAsync(Guid id)
         {
-            var company = await _unitOfWork.CompanyRepository.QueryByIdAsync(id);
-            var companyToReturn = _mapper.Map<CompanyDto>(company);
+            Company company = await _unitOfWork.CompanyRepository.QueryByIdAsync(id);
+            CompanyDto companyToReturn = _mapper.Map<CompanyDto>(company);
 
             return companyToReturn;
         }
@@ -39,15 +42,16 @@ namespace EmployeeApp.Service.Services
             try
             {
                 Validation.TrimStringProperies(createCompanyDto);
-                var newCompany = _mapper.Map<Company>(createCompanyDto);
+                Company newCompany = _mapper.Map<Company>(createCompanyDto);
                 newCompany.Id = Guid.NewGuid();
 
                 await _unitOfWork.CompanyRepository.InsertAsync(newCompany);
                 await _unitOfWork.SaveAllAsync();
                 return newCompany.Id;
             }
-            catch (Exception)
+            catch (Exception exception)
             {
+                _logger.LogError(exception, "Somethings went wrong during creating");
                 return null;
             }
         }
@@ -57,15 +61,16 @@ namespace EmployeeApp.Service.Services
             try
             {
                 Validation.TrimStringProperies(updateCompanyDto);
-                var company = await _unitOfWork.CompanyRepository.QueryByIdAsync(id);
+                Company company = await _unitOfWork.CompanyRepository.QueryByIdAsync(id);
                 _mapper.Map<UpdateCompanyDto, Company>(updateCompanyDto, company);
 
                 await _unitOfWork.CompanyRepository.UpdateAsync(company);
                 await _unitOfWork.SaveAllAsync();
                 return _mapper.Map<CompanyDto>(company);
             }
-            catch (Exception)
+            catch (Exception exception)
             {
+                _logger.LogError(exception, "Somethings went wrong during updating");
                 return null;
             }
         }
@@ -78,8 +83,9 @@ namespace EmployeeApp.Service.Services
                 await _unitOfWork.SaveAllAsync();
                 return true;
             }
-            catch (Exception)
+            catch (Exception exception)
             {
+                _logger.LogError(exception, "Somethings went wrong during deleting");
                 return false;
             }
         }

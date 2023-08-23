@@ -1,5 +1,6 @@
 using EmployeeApp.Service.DTOs.Employee;
 using EmployeeApp.Service.Interfaces;
+using EmployeeApp.Service.RabbitMQ;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,7 +11,7 @@ namespace EmployeeApp.Api.Controllers
     {
         private readonly IEmployeeService _employeeService;
 
-        public EmployeeController(IEmployeeService employeeService)
+        public EmployeeController(IEmployeeService employeeService, IMessageSender sender) : base(sender)
         {
             _employeeService = employeeService;
         }
@@ -18,7 +19,7 @@ namespace EmployeeApp.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<List<EmployeeDto>>> GetEmployees()
         {
-            var companies = await _employeeService.GetEmployeesAsync();
+            List<EmployeeDto> companies = await _employeeService.GetEmployeesAsync();
             if (companies == null)
                 return BadRequest();
             else if (companies.Count == 0)
@@ -30,7 +31,7 @@ namespace EmployeeApp.Api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<EmployeeDto>> GetEmployeeById(Guid id)
         {
-            var employee = await _employeeService.GetEmployeeByIdAsync(id);
+            EmployeeDto employee = await _employeeService.GetEmployeeByIdAsync(id);
             if (employee == null)
                 return NotFound();
 
@@ -40,23 +41,24 @@ namespace EmployeeApp.Api.Controllers
         [HttpPost("add")]
         public async Task<ActionResult> CreateNewEmployee(CreateEmployeeDto createEmployeeDto)
         {
-            var isEmailExisted = await _employeeService.CheckExistingEmployeeEmail(createEmployeeDto.Email);
+            bool isEmailExisted = await _employeeService.CheckExistingEmployeeEmail(createEmployeeDto.Email);
             if (isEmailExisted)
                 return BadRequest("Email has already taken");
 
-            var isPhoneExisted = await _employeeService.CheckExistingEmployeePhone(createEmployeeDto.PhoneNumber);
+            bool isPhoneExisted = await _employeeService.CheckExistingEmployeePhone(createEmployeeDto.PhoneNumber);
             if (isPhoneExisted)
                 return BadRequest("Phone number has already taken");
 
-            var employeeId = await _employeeService.CreateEmployee(createEmployeeDto);
-            var newEmployee = await _employeeService.GetEmployeeByIdAsync(employeeId.Value);
+            Guid? employeeId = await _employeeService.CreateEmployee(createEmployeeDto);
+            EmployeeDto newEmployee = await _employeeService.GetEmployeeByIdAsync(employeeId.Value);
+
             return CreatedAtAction(nameof(GetEmployeeById), newEmployee, new { id = employeeId });
         }
 
         [HttpPut("edit/{id}")]
         public async Task<ActionResult<EmployeeDto>> UpdateComapny(Guid id, UpdateEmployeeDto updateEmployeeDto)
         {
-            var updatedEmployee = await _employeeService.UpdateEmployee(id, updateEmployeeDto);
+            EmployeeDto updatedEmployee = await _employeeService.UpdateEmployee(id, updateEmployeeDto);
             if (updatedEmployee == null)
                 return BadRequest("An error occurred during updating");
 
@@ -66,7 +68,7 @@ namespace EmployeeApp.Api.Controllers
         [HttpDelete("delete/{id}")]
         public async Task<ActionResult> DeleteEmployee(Guid id)
         {
-            var result = await _employeeService.DeleteEmployee(id);
+            bool result = await _employeeService.DeleteEmployee(id);
             if (!result)
                 return BadRequest("An error occurred during deleting");
 

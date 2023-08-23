@@ -16,28 +16,28 @@ namespace EmployeeApp.Api.Middlewares
             _logger = logger;
         }
 
-        public async Task InvokeAsync(HttpContext context)
+        public async Task InvokeAsync(HttpContext httpContext)
         {
             try
             {
-                await _next(context);
+                await _next(httpContext);
             }
             catch (Exception exception)
             {
                 _logger.LogCritical(exception, "Internal Server Error");
 
-                context.Response.ContentType = "application/json";
-                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                httpContext.Response.ContentType = "application/json";
+                httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
                 var response = _env.IsDevelopment() ?
-                    new ApiException(context.Response.StatusCode, exception.Message, exception.StackTrace?.ToString()) :
-                    new ApiException(context.Response.StatusCode, exception.Message, "Internal Server Error");
+                    new ApiException(httpContext.Response.StatusCode, exception.Message, exception.StackTrace?.ToString()) :
+                    new ApiException(httpContext.Response.StatusCode, exception.Message, "Internal Server Error");
 
                 var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
 
                 var json = JsonSerializer.Serialize(response, options);
 
-                await context.Response.WriteAsync(json);
+                await httpContext.Response.WriteAsync(json);
             }
         }
     }
