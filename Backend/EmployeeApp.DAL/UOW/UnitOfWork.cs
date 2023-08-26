@@ -12,7 +12,6 @@ namespace EmployeeApp.DAL.UOW
     public class UnitOfWork : IUnitOfWork
     {
         private readonly EmployeeAppDbContext _dbContext;
-        public IAccountRepository _accountRepository;
         public ICompanyRepository _companyRepository;
         public IEmployeeRepository _employeeRepository;
         private bool disposed = false;
@@ -20,15 +19,6 @@ namespace EmployeeApp.DAL.UOW
         public UnitOfWork(EmployeeAppDbContext dbContext)
         {
             _dbContext = dbContext;
-        }
-
-        public IAccountRepository AccountRepository
-        {
-            get
-            {
-                _accountRepository ??= new AccountRepository(_dbContext);
-                return _accountRepository;
-            }
         }
 
         public ICompanyRepository CompanyRepository

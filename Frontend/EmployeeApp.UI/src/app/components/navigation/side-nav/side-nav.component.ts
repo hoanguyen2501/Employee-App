@@ -1,9 +1,7 @@
 import { MediaMatcher } from '@angular/cdk/layout';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
 import { Observable, of } from 'rxjs';
-import { UserLogin } from 'src/app/models/AppUser/userLogin';
+import { AuthAppUser } from 'src/app/models/AppUser/authAppUser';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -13,7 +11,7 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class SideNavComponent implements OnInit, OnDestroy {
   mobileQuery: MediaQueryList;
-  currentUser$: Observable<UserLogin | null> = of(null);
+  currentUser$: Observable<AuthAppUser | null> = of(null);
 
   fillerNav = ['Company', 'Employee'];
 
@@ -22,9 +20,7 @@ export class SideNavComponent implements OnInit, OnDestroy {
   constructor(
     changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher,
-    private authService: AuthService,
-    private toastr: ToastrService,
-    private router: Router
+    private authService: AuthService
   ) {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -40,7 +36,5 @@ export class SideNavComponent implements OnInit, OnDestroy {
 
   logout() {
     this.authService.logout();
-    this.toastr.success('Logged out successfully', 'Logout');
-    this.router.navigate(['/login']);
   }
 }

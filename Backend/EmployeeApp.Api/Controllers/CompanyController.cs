@@ -1,6 +1,5 @@
 using EmployeeApp.Service.DTOs.Company;
 using EmployeeApp.Service.Interfaces;
-using EmployeeApp.Service.RabbitMQ;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,10 +9,12 @@ namespace EmployeeApp.Api.Controllers
     public class CompanyController : BaseApiController
     {
         private readonly ICompanyService _companyService;
+        private readonly RabbitMqController _rabbitMqController;
 
-        public CompanyController(ICompanyService companyService, IMessageSender sender) : base(sender)
+        public CompanyController(ICompanyService companyService, RabbitMqController rabbitMqController)
         {
             _companyService = companyService;
+            _rabbitMqController = rabbitMqController;
         }
 
         [HttpGet]

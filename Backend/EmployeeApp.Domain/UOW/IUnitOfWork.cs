@@ -7,7 +7,6 @@ namespace EmployeeApp.Domain.UOW
     {
         ICompanyRepository CompanyRepository { get; }
         IEmployeeRepository EmployeeRepository { get; }
-        IAccountRepository AccountRepository { get; }
 
         Task<IDbContextTransaction> CreateTransaction();
 

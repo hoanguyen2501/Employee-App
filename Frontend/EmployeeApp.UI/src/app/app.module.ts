@@ -8,6 +8,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
@@ -19,6 +20,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgxSpinnerModule } from 'ngx-spinner';
 import { ToastrModule } from 'ngx-toastr';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -27,19 +29,19 @@ import { CompanyAddComponent } from './components/company/company-add/company-ad
 import { CompanyDetailsComponent } from './components/company/company-details/company-details.component';
 import { CompanyEditComponent } from './components/company/company-edit/company-edit.component';
 import { CompanyListComponent } from './components/company/company-list/company-list.component';
+import { RefreshDialogComponent } from './components/dialog/refresh-dialog/refresh-dialog.component';
 import { EmployeeAddComponent } from './components/employee/employee-add/employee-add.component';
 import { EmployeeDetailsComponent } from './components/employee/employee-details/employee-details.component';
 import { EmployeeEditComponent } from './components/employee/employee-edit/employee-edit.component';
 import { EmployeeListComponent } from './components/employee/employee-list/employee-list.component';
+import { BadRequestComponent } from './components/errors/bad-request/bad-request.component';
 import { InternalServerErrorComponent } from './components/errors/internal-server-error/internal-server-error.component';
 import { NotFoundComponent } from './components/errors/not-found/not-found.component';
+import { TextInputComponent } from './components/forms/text-input/text-input.component';
 import { HomeComponent } from './components/home/home.component';
 import { SideNavComponent } from './components/navigation/side-nav/side-nav.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
-import { BadRequestComponent } from './components/errors/bad-request/bad-request.component';
-import { TextInputComponent } from './components/forms/text-input/text-input.component';
-import { NgxSpinnerModule } from 'ngx-spinner';
 import { LoadingInterceptor } from './interceptors/loading.interceptor';
 
 @NgModule({
@@ -60,6 +62,7 @@ import { LoadingInterceptor } from './interceptors/loading.interceptor';
     LoginComponent,
     BadRequestComponent,
     TextInputComponent,
+    RefreshDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -89,6 +92,7 @@ import { LoadingInterceptor } from './interceptors/loading.interceptor';
     MatDatepickerModule,
     MatNativeDateModule,
     MatMenuModule,
+    MatDialogModule,
     ReactiveFormsModule,
     NgxSpinnerModule.forRoot({
       type: 'ball-spin-clockwise',

@@ -9,6 +9,8 @@ logger.Debug("Init receiver server");
 
 try
 {
+    logger.Info("Started program successfully");
+
     ConnectionFactory factory = new()
     {
         Uri = new Uri("amqp:guest:guest@localhost:5672"),

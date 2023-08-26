@@ -24,7 +24,8 @@ try
 
         builder.Services.AddJwtIdentity(builder.Configuration)
                         .AddDependencyInjection()
-                        .AddApplicationServices(builder.Configuration);
+                        .AddApplicationServices(builder.Configuration)
+                        .AddControlerAsServiceExtension();
     }
 
     WebApplication app = builder.Build();

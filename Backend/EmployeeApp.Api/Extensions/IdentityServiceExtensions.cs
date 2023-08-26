@@ -30,6 +30,16 @@ namespace EmployeeApp.Api.Extensions
                 options.RequireHttpsMetadata = false;
                 options.SaveToken = true;
                 options.Validate();
+
+                //options.Events.OnMessageReceived = async context =>
+                //{
+                //    if (context.Request.Cookies.ContainsKey("X-Access-Token"))
+                //    {
+                //        context.Token = context.Request.Cookies["X-Access-Token"];
+                //    }
+
+                //    await Task.CompletedTask;
+                //};
             });
 
             services.AddAuthorization();

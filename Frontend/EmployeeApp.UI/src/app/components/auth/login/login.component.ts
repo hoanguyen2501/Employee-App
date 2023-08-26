@@ -17,7 +17,15 @@ export class LoginComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private toastr: ToastrService
-  ) {}
+  ) {
+    this.authService.currentUser$.subscribe({
+      next: (user) => {
+        if (user) {
+          this.router.navigateByUrl('');
+        }
+      },
+    });
+  }
 
   ngOnInit(): void {
     this.initialize();
@@ -34,6 +42,7 @@ export class LoginComponent implements OnInit {
     this.authService.login(this.loginForm.value).subscribe({
       next: (user) => {
         this.toastr.success('Logged in successfully', 'Login');
+        this.authService.autoLogout();
         this.router.navigate(['']);
       },
       error: (error) => {

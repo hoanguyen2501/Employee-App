@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { UserLogin } from './models/AppUser/userLogin';
+import { NavigationEnd, Router } from '@angular/router';
+import { Observable, filter, of } from 'rxjs';
+import { AuthAppUser } from './models/AppUser/authAppUser';
 import { AuthService } from './services/auth.service';
 
 @Component({
@@ -10,9 +11,17 @@ import { AuthService } from './services/auth.service';
 })
 export class AppComponent implements OnInit {
   title = 'EmployeeApp.UI';
-  currentUser$: Observable<UserLogin | null> = of(null);
+  currentUser$: Observable<AuthAppUser | null> = of(null);
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {
+    this.router.events
+      .pipe(filter((rs): rs is NavigationEnd => rs instanceof NavigationEnd))
+      .subscribe((events) => {
+        if (events.id === 1 && events.urlAfterRedirects == events.url) {
+          this.authService.autoLogout();
+        }
+      });
+  }
 
   ngOnInit(): void {
     this.currentUser$ = this.authService.currentUser$;
@@ -24,7 +33,7 @@ export class AppComponent implements OnInit {
 
     if (!userString) return;
 
-    const user: UserLogin = JSON.parse(userString);
+    const user: AuthAppUser = JSON.parse(userString);
     this.authService.setCurrentUser(user);
   }
 }

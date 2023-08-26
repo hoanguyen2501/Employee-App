@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { UserLogin } from '../models/AppUser/userLogin';
+import { AuthAppUser } from '../models/AppUser/authAppUser';
 
 @Injectable({
   providedIn: 'root',
@@ -16,15 +16,8 @@ export class TokenStorageService {
     return token ?? '';
   }
 
-  storeUser(user: UserLogin): void {
+  storeUser(user: AuthAppUser): void {
     localStorage.setItem('user', JSON.stringify(user));
-    localStorage.setItem('access_token', user.token);
-  }
-
-  getUser(): any {
-    var user = localStorage.getItem('user');
-    if (user) return JSON.parse(user);
-
-    return null;
+    localStorage.setItem('access_token', user.accessToken);
   }
 }

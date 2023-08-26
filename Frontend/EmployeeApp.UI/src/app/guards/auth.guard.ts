@@ -7,16 +7,16 @@ import {
   UrlTree,
 } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { Observable, map } from 'rxjs';
-import { UserLogin } from '../models/AppUser/userLogin';
-import { AuthService } from '../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
+import { Observable, map } from 'rxjs';
+import { AuthAppUser } from '../models/AppUser/authAppUser';
+import { AuthService } from '../services/auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthGuard implements CanActivate {
-  user: UserLogin | undefined;
+  user: AuthAppUser | undefined;
   constructor(
     private authService: AuthService,
     private toastr: ToastrService,
@@ -37,13 +37,12 @@ export class AuthGuard implements CanActivate {
       map((user) => {
         if (user) {
           var jwtHelper = new JwtHelperService();
-          if (jwtHelper.isTokenExpired(user.token)) {
-            this.authService.logout();
+          if (jwtHelper.isTokenExpired(user.accessToken)) {
             this.toastr.warning(
               'Your session is expired. Please login agin!',
               'Warning'
             );
-            this.router.navigate(['/login']);
+            this.authService.logout();
             return false;
           }
 

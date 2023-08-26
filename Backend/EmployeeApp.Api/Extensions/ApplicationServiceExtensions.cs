@@ -1,3 +1,4 @@
+using EmployeeApp.Api.Controllers;
 using EmployeeApp.DAL.DataAccess;
 using EmployeeApp.DAL.DataAccess.Seeding;
 using EmployeeApp.Service.Mapper;
@@ -16,8 +17,9 @@ namespace EmployeeApp.Api.Extensions
             {
                 options.AddDefaultPolicy(builder =>
                 {
-                    builder.WithOrigins("http://localhost:4200")
+                    builder.WithOrigins("https://localhost:4200")
                             .WithMethods("GET", "POST", "PUT", "PATCH", "DELETE")
+                            .AllowCredentials()
                             .AllowAnyHeader();
                 });
             });
@@ -49,6 +51,12 @@ namespace EmployeeApp.Api.Extensions
             }
 
             return app;
+        }
+
+        public static IServiceCollection AddControlerAsServiceExtension(this IServiceCollection services)
+        {
+            services.AddTransient<RabbitMqController, RabbitMqController>();
+            return services;
         }
     }
 }

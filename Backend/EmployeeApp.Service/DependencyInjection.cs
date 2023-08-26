@@ -14,8 +14,7 @@ namespace EmployeeApp.Service
             services.AddRepositoryCollection();
 
             // DI of Services
-            services.AddScoped<IJwtService, JwtService>();
-            services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IAutheService, AuthService>();
             services.AddScoped<ICompanyService, CompanyService>();
             services.AddScoped<IEmployeeService, EmployeeService>();
 
