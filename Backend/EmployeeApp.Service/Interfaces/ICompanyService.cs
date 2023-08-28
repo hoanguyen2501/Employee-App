@@ -9,5 +9,7 @@ namespace EmployeeApp.Service.Interfaces
         Task<Guid?> CreateCompany(CreateCompanyDto createCompanyDto);
         Task<CompanyDto> UpdateCompany(Guid id, UpdateCompanyDto updateCompanyDto);
         Task<bool> DeleteCompany(Guid id);
+        Task<bool> CheckExistingCompanyEmail(string email);
+        Task<bool> CheckExistingCompanyPhone(string phone);
     }
 }

@@ -1,8 +1,9 @@
 ﻿using EmployeeApp.DAL.DataAccess;
 using EmployeeApp.DAL.Repositories;
-using EmployeeApp.Domain.Entities;
 using EmployeeApp.Domain.Repositories;
 using EmployeeApp.Domain.UOW;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Threading.Tasks;
 
@@ -11,8 +12,8 @@ namespace EmployeeApp.DAL.UOW
     public class UnitOfWork : IUnitOfWork
     {
         private readonly EmployeeAppDbContext _dbContext;
-        public IGenericRepository<Company> _companyRepository;
-        public IGenericRepository<Employee> _employeeRepository;
+        public ICompanyRepository _companyRepository;
+        public IEmployeeRepository _employeeRepository;
         private bool disposed = false;
 
         public UnitOfWork(EmployeeAppDbContext dbContext)
@@ -20,22 +21,37 @@ namespace EmployeeApp.DAL.UOW
             _dbContext = dbContext;
         }
 
-        public IGenericRepository<Company> CompanyRepository
+        public ICompanyRepository CompanyRepository
         {
             get
             {
-                _companyRepository ??= new GenericRepository<Company>(_dbContext);
+                _companyRepository ??= new CompanyRepository(_dbContext);
                 return _companyRepository;
             }
         }
 
-        public IGenericRepository<Employee> EmployeeRepository
+        public IEmployeeRepository EmployeeRepository
         {
             get
             {
-                _employeeRepository ??= new GenericRepository<Employee>(_dbContext);
+                _employeeRepository ??= new EmployeeRepository(_dbContext);
                 return _employeeRepository;
             }
+        }
+
+        public async Task<IDbContextTransaction> CreateTransaction()
+        {
+            return await _dbContext.Database.BeginTransactionAsync(System.Data.IsolationLevel.ReadCommitted);
+        }
+
+        public async Task Commit()
+        {
+            await _dbContext.Database.CommitTransactionAsync();
+        }
+
+        public async Task RollbackTransaction()
+        {
+            await _dbContext.Database.RollbackTransactionAsync();
         }
 
         public async Task SaveAllAsync()

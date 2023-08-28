@@ -36,12 +36,20 @@ namespace EmployeeApp.DAL.Repositories
             return await _dbSet.Include(includes => includes).SingleOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<TEntity>> QueryAsync(Expression<Func<TEntity, bool>> expression, params Expression<Func<TEntity, object>>[] includes)
+        public async Task<IEnumerable<TEntity>> QueryAllByConditionsAsync(Expression<Func<TEntity, bool>> expression, params Expression<Func<TEntity, object>>[] includes)
         {
             if (includes == null || includes.Length == 0)
                 return await _dbSet.Where(expression).ToListAsync();
 
             return await _dbSet.Where(expression).Include(includes => includes).ToListAsync();
+        }
+
+        public async Task<TEntity> QueryByConditionsAsync(Expression<Func<TEntity, bool>> expression, params Expression<Func<TEntity, object>>[] includes)
+        {
+            if (includes == null || includes.Length == 0)
+                return await _dbSet.Where(expression).FirstOrDefaultAsync();
+
+            return await _dbSet.Where(expression).Include(includes => includes).FirstOrDefaultAsync();
         }
 
         public async Task InsertAsync(TEntity entity)

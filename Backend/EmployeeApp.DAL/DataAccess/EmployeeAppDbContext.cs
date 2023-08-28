@@ -15,7 +15,6 @@ namespace EmployeeApp.DAL.DataAccess
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            new AppUserConfiguration().Configure(modelBuilder.Entity<AppUser>());
             new CompanyConfiguration().Configure(modelBuilder.Entity<Company>());
             new EmployeeConfiguration().Configure(modelBuilder.Entity<Employee>());
         }

@@ -1,0 +1,109 @@
+<ng-container>
+  <div class="content">
+    <mat-card-title class="content-title"
+      >Edit company information</mat-card-title
+    >
+    <ng-container *ngIf="company">
+      <div class="btn-action">
+        <button
+          mat-raised-button
+          color="primary"
+          type="button"
+          routerLink="/company"
+        >
+          List
+        </button>
+
+        <button
+          class="ms-2"
+          mat-raised-button
+          color="primary"
+          type="button"
+          [routerLink]="['/company', company.id]"
+        >
+          Details
+        </button>
+      </div>
+      <form [formGroup]="companyForm" novalidate (ngSubmit)="onSubmit()">
+        <mat-card class="company-form-card shadow bg-body rounded">
+          <mat-card-content class="fs-5">
+            <div class="row">
+              <div class="col-6">
+                <app-text-input
+                  [formControl]="$any(companyForm.controls['companyName'])"
+                  [label]="'Company name'"
+                ></app-text-input>
+              </div>
+              <div class="col">
+                <mat-form-field class="full-width">
+                  <mat-label>Established at</mat-label>
+                  <input
+                    matInput
+                    [matDatepicker]="picker"
+                    placeholder="12/31/1999"
+                    formControlName="establishedAt"
+                  />
+                  <mat-hint>MM/DD/YYYY</mat-hint>
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="picker"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <app-text-input
+                  [formControl]="$any(companyForm.controls['address'])"
+                  [label]="'Address'"
+                ></app-text-input>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-6">
+                <app-text-input
+                  [formControl]="$any(companyForm.controls['city'])"
+                  [label]="'City'"
+                ></app-text-input>
+              </div>
+              <div class="col-6">
+                <app-text-input
+                  [formControl]="$any(companyForm.controls['country'])"
+                  [label]="'Country'"
+                ></app-text-input>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-6">
+                <app-text-input
+                  [formControl]="$any(companyForm.controls['email'])"
+                  [label]="'Email'"
+                ></app-text-input>
+              </div>
+              <div class="col-6">
+                <app-text-input
+                  [formControl]="$any(companyForm.controls['phoneNumber'])"
+                  [label]="'Phone number'"
+                ></app-text-input>
+              </div>
+            </div>
+          </mat-card-content>
+          <mat-card-actions>
+            <button
+              mat-raised-button
+              color="accent"
+              type="submit"
+              [disabled]="!(companyForm.dirty && companyForm.valid)"
+            >
+              Submit
+            </button>
+            <button mat-raised-button type="button" (click)="onReset()">
+              Cancel
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </form></ng-container
+    >
+  </div>
+</ng-container>

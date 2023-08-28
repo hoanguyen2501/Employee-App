@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeApp.DAL", "Employee
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeApp.Service", "EmployeeApp.Service\EmployeeApp.Service.csproj", "{6273EBFD-6738-4ACE-861C-0BC15D8695A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeApp.Utils", "EmployeeApp.Utils\EmployeeApp.Utils.csproj", "{03225929-E74E-44F0-A837-78FFF9E05437}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeApp.Utils", "EmployeeApp.Utils\EmployeeApp.Utils.csproj", "{03225929-E74E-44F0-A837-78FFF9E05437}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeApp.RabbitReceiver", "EmployeeApp.RabbitReceiver\EmployeeApp.RabbitReceiver.csproj", "{F34E1F5A-E113-47BE-9F66-0054840199FF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{03225929-E74E-44F0-A837-78FFF9E05437}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{03225929-E74E-44F0-A837-78FFF9E05437}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{03225929-E74E-44F0-A837-78FFF9E05437}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F34E1F5A-E113-47BE-9F66-0054840199FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F34E1F5A-E113-47BE-9F66-0054840199FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F34E1F5A-E113-47BE-9F66-0054840199FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F34E1F5A-E113-47BE-9F66-0054840199FF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -4,6 +4,7 @@ using EmployeeApp.Domain.UOW;
 using EmployeeApp.Service.DTOs.Employee;
 using EmployeeApp.Service.Interfaces;
 using EmployeeApp.Utils.Validation;
+using Microsoft.Extensions.Logging;
 
 namespace EmployeeApp.Service.Services
 {
@@ -11,25 +12,27 @@ namespace EmployeeApp.Service.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ILogger<EmployeeService> _logger;
 
-        public EmployeeService(IUnitOfWork unitOfWork, IMapper mapper)
+        public EmployeeService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<EmployeeService> logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<List<EmployeeDto>> GetEmployeesAsync()
         {
-            var employees = await _unitOfWork.EmployeeRepository.QueryAllAsync();
-            var employeesToReturn = _mapper.Map<List<EmployeeDto>>(employees);
+            IEnumerable<Employee> employees = await _unitOfWork.EmployeeRepository.QueryAllAsync();
+            List<EmployeeDto> employeesToReturn = _mapper.Map<List<EmployeeDto>>(employees);
 
             return employeesToReturn;
         }
 
         public async Task<EmployeeDto> GetEmployeeByIdAsync(Guid id)
         {
-            var employee = await _unitOfWork.EmployeeRepository.QueryByIdAsync(id);
-            var employeeToReturn = _mapper.Map<EmployeeDto>(employee);
+            Employee employee = await _unitOfWork.EmployeeRepository.QueryByIdAsync(id);
+            EmployeeDto employeeToReturn = _mapper.Map<EmployeeDto>(employee);
 
             return employeeToReturn;
         }
@@ -39,16 +42,16 @@ namespace EmployeeApp.Service.Services
             try
             {
                 Validation.TrimStringProperies(createEmployeeDto);
-                var newEmployee = _mapper.Map<Employee>(createEmployeeDto);
-                newEmployee.Id = Guid.NewGuid();
+                Employee newEmployee = _mapper.Map<Employee>(createEmployeeDto);
 
                 await _unitOfWork.EmployeeRepository.InsertAsync(newEmployee);
                 await _unitOfWork.SaveAllAsync();
 
                 return newEmployee.Id;
             }
-            catch (Exception)
+            catch (Exception exception)
             {
+                _logger.LogError(exception, "Somethings went wrong during creating");
                 return null;
             }
         }
@@ -58,15 +61,16 @@ namespace EmployeeApp.Service.Services
             try
             {
                 Validation.TrimStringProperies(updateEmployeeDto);
-                var employee = await _unitOfWork.EmployeeRepository.QueryByIdAsync(id);
+                Employee employee = await _unitOfWork.EmployeeRepository.QueryByIdAsync(id);
                 _mapper.Map<UpdateEmployeeDto, Employee>(updateEmployeeDto, employee);
 
                 await _unitOfWork.EmployeeRepository.UpdateAsync(employee);
                 await _unitOfWork.SaveAllAsync();
                 return _mapper.Map<EmployeeDto>(employee);
             }
-            catch (Exception)
+            catch (Exception exception)
             {
+                _logger.LogError(exception, "Somethings went wrong during updating");
                 return null;
             }
         }
@@ -75,14 +79,29 @@ namespace EmployeeApp.Service.Services
         {
             try
             {
+                var employee = _unitOfWork.EmployeeRepository.QueryByIdAsync(id);
+                if (employee == null)
+                    return false;
+
                 await _unitOfWork.EmployeeRepository.DeleteAsync(id);
                 await _unitOfWork.SaveAllAsync();
                 return true;
             }
-            catch (Exception)
+            catch (Exception exception)
             {
+                _logger.LogError(exception, "Somethings went wrong during deleting");
                 return false;
             }
+        }
+
+        public async Task<bool> CheckExistingEmployeeEmail(string email)
+        {
+            return await _unitOfWork.EmployeeRepository.QueryByConditionsAsync(cond => cond.Email == email) != null;
+        }
+
+        public async Task<bool> CheckExistingEmployeePhone(string phone)
+        {
+            return await _unitOfWork.EmployeeRepository.QueryByConditionsAsync(cond => cond.PhoneNumber == phone) != null;
         }
     }
 }

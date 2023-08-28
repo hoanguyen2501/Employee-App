@@ -81,15 +81,24 @@ export class EmployeeAddComponent implements OnInit, PendingChangesGuard {
   initialForm() {
     this.employeeForm = this.formBuilder.group({
       companyId: [null, Validators.required],
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
+      firstName: [
+        '',
+        [Validators.required, , Validators.pattern(/^[A-Za-z]+$/)],
+      ],
+      lastName: [
+        '',
+        [Validators.required, , Validators.pattern(/^[A-Za-z]+$/)],
+      ],
       gender: [null, Validators.required],
       dateOfBirth: ['', Validators.required],
       address: ['', Validators.required],
       city: ['', Validators.required],
       country: ['', Validators.required],
       email: ['', Validators.required],
-      phoneNumber: ['', Validators.required],
+      phoneNumber: [
+        '',
+        [Validators.required, Validators.pattern(/(^[0-9]{10,15})+$/)],
+      ],
     });
   }
 

@@ -1,12 +1,15 @@
-﻿using EmployeeApp.Domain.Entities;
-using EmployeeApp.Domain.Repositories;
+﻿using EmployeeApp.Domain.Repositories;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace EmployeeApp.Domain.UOW
 {
     public interface IUnitOfWork : IDisposable
     {
-        IGenericRepository<Company> CompanyRepository { get; }
-        IGenericRepository<Employee> EmployeeRepository { get; }
+        ICompanyRepository CompanyRepository { get; }
+        IEmployeeRepository EmployeeRepository { get; }
+
+        Task<IDbContextTransaction> CreateTransaction();
+
         Task SaveAllAsync();
     }
 }
