@@ -62,7 +62,9 @@ export class AuthService {
   logout(): void {
     this.http
       .post(this.baseUrl + 'auth/logout', {}, this.httpOptions)
-      .subscribe();
+      .subscribe({
+        next: () => window.location.reload(),
+      });
     this.tokenService.clearStorage();
     this.currentUserSource.next(null);
     this.router.navigate(['/login']);

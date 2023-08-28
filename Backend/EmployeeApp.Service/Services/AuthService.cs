@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace EmployeeApp.Service.Services
 {
-    public class AuthService : IAutheService
+    public class AuthService : IAuthService
     {
         private readonly IConfiguration _config;
 
@@ -89,28 +89,32 @@ namespace EmployeeApp.Service.Services
             };
         }
 
-        public async Task<bool?> GetUserByUsername(string username, string accessToken)
+        public async Task<bool> Logout(string refreshToken)
         {
-            //string realm = _config["Keycloak:realm"];
-            //string authServerUrl = $"{_config["Keycloak:auth-server-url"]}";
+            string realm = _config["Keycloak:realm"];
+            string clientId = _config["Keycloak:resource"];
+            string secret = _config["Keycloak:credentials:secret"];
+            string authServerUrl = $"{_config["Keycloak:auth-server-url"]}";
 
-            //string requestUrl = authServerUrl + $"admin/realms/{realm}/users?username={username}&exact=true";
+            string requestUrl = authServerUrl + $"realms/{realm}/protocol/openid-connect/logout";
+            Dictionary<string, string> requestBody = new()
+            {
+                {"client_id", clientId},
+                {"client_secret", secret},
+                {"refresh_token",refreshToken},
+            };
 
-            //using HttpClient httpClient = new();
-            //using HttpRequestMessage requestRefreshToken = new(HttpMethod.Post, requestUrl);
-            //requestRefreshToken.Headers.Add("Authorization", $"Bearer {accessToken}");
-            //requestRefreshToken.Headers.Remove("Content-Type");
+            using HttpClient httpClient = new();
+            using HttpRequestMessage requestRefreshToken = new(HttpMethod.Post, requestUrl)
+            {
+                Content = new FormUrlEncodedContent(requestBody)
+            };
+            using HttpResponseMessage response = await httpClient.SendAsync(requestRefreshToken);
 
-            //using HttpResponseMessage response = await httpClient.SendAsync(requestRefreshToken);
+            if (!response.IsSuccessStatusCode)
+                return false;
 
-            //if (!response.IsSuccessStatusCode)
-            //    return null;
-
-            //string result = response.Content.ReadAsStringAsync().Result;
-            //List<object> user = JsonConvert.DeserializeObject<List<object>>(result);
-
-            //return user.Count > 0;
-            throw new NotImplementedException();
+            return true;
         }
     }
 }

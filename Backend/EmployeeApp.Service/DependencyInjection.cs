@@ -14,7 +14,7 @@ namespace EmployeeApp.Service
             services.AddRepositoryCollection();
 
             // DI of Services
-            services.AddScoped<IAutheService, AuthService>();
+            services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ICompanyService, CompanyService>();
             services.AddScoped<IEmployeeService, EmployeeService>();
 

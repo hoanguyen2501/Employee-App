@@ -5,21 +5,21 @@ using Microsoft.AspNetCore.Mvc;
 namespace EmployeeApp.Api.Controllers
 {
     [Route("api/auth")]
-    public class AccountController : BaseApiController
+    public class AuthController : BaseApiController
     {
-        private readonly IAutheService _accountService;
+        private readonly IAuthService _authService;
         private readonly RabbitMqController _rabbitMqController;
 
-        public AccountController(IAutheService accountService, RabbitMqController rabbitMqController)
+        public AuthController(IAuthService accountService, RabbitMqController rabbitMqController)
         {
-            _accountService = accountService;
+            _authService = accountService;
             _rabbitMqController = rabbitMqController;
         }
 
         [HttpPost("login")]
         public async Task<ActionResult<AppUserDto>> Login(AppUserLoginDto loginDto)
         {
-            AppUserDto newAppUser = await _accountService.Login(loginDto);
+            AppUserDto newAppUser = await _authService.Login(loginDto);
             if (newAppUser == null)
                 return BadRequest("Username or Password is invalid");
 
@@ -60,7 +60,7 @@ namespace EmployeeApp.Api.Controllers
 
             AppUserRefreshDto refreshUserDto = new() { Username = username, RefreshToken = refreshToken };
 
-            AppUserDto refreshedAppUser = await _accountService.Refresh(refreshUserDto);
+            AppUserDto refreshedAppUser = await _authService.Refresh(refreshUserDto);
 
             if (refreshedAppUser == null)
                 return BadRequest("Refresh token is invalid");
@@ -94,13 +94,23 @@ namespace EmployeeApp.Api.Controllers
         }
 
         [HttpPost("logout")]
-        public ActionResult Logout()
+        public async Task<ActionResult> Logout()
         {
-            Response.Cookies.Delete("X-Username");
-            Response.Cookies.Delete("X-Access-Token");
-            Response.Cookies.Delete("X-Refresh-Token");
+            if (!(Request.Cookies["X-Username"] != null &&
+                Request.Cookies.TryGetValue("X-Refresh-Token", out string refreshToken)))
+                return BadRequest("Your request is declined");
 
-            return Ok();
+            bool isLoggedout = await _authService.Logout(refreshToken);
+
+            if (isLoggedout)
+            {
+                Response.Cookies.Delete("X-Username");
+                Response.Cookies.Delete("X-Access-Token");
+                Response.Cookies.Delete("X-Refresh-Token");
+                return NoContent();
+            }
+
+            return BadRequest();
         }
     }
 }
