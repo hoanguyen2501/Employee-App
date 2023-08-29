@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -12,6 +13,7 @@ export class RefreshDialogComponent {
   constructor(
     private dialogRef: MatDialogRef<RefreshDialogComponent>,
     private authService: AuthService,
+    private router: Router,
     private toastr: ToastrService
   ) {
     this.dialogRef.disableClose = true;
@@ -21,6 +23,7 @@ export class RefreshDialogComponent {
     this.authService.refresh().subscribe({
       next: () => {
         this.authService.autoLogout();
+        this.router.navigateByUrl(this.router.url);
         this.toastr.success('Your session was refreshed!');
       },
       error: () => {

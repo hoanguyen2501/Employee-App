@@ -1,4 +1,5 @@
-﻿using EmployeeApp.Service.DTOs.AppUser;
+﻿using AutoMapper;
+using EmployeeApp.Service.DTOs.AppUser;
 using EmployeeApp.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,33 +8,37 @@ namespace EmployeeApp.Api.Controllers
     [Route("api/auth")]
     public class AuthController : BaseApiController
     {
+        private readonly IMapper _mapper;
         private readonly IAuthService _authService;
         private readonly RabbitMqController _rabbitMqController;
 
-        public AuthController(IAuthService accountService, RabbitMqController rabbitMqController)
+        public AuthController(IAuthService accountService, RabbitMqController rabbitMqController, IMapper mapper)
         {
             _authService = accountService;
             _rabbitMqController = rabbitMqController;
+            _mapper = mapper;
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<AppUserDto>> Login(AppUserLoginDto loginDto)
+        public async Task<ActionResult<AuthResponse>> Login(AuthRequest loginDto)
         {
-            AppUserDto newAppUser = await _authService.Login(loginDto);
-            if (newAppUser == null)
+            AppUserDto appUser = await _authService.Login(loginDto);
+            if (appUser == null)
                 return BadRequest("Username or Password is invalid");
+
+            AuthResponse authResponse = _mapper.Map<AuthResponse>(appUser);
 
             HttpContext.Response.Cookies.Append(
                 "X-Username",
-                newAppUser.Username,
+                authResponse.Username,
                 new CookieOptions { HttpOnly = true, SameSite = SameSiteMode.Strict });
             HttpContext.Response.Cookies.Append(
                 "X-Access-Token",
-                newAppUser.AccessToken,
+                authResponse.AccessToken,
                 new CookieOptions { HttpOnly = true, SameSite = SameSiteMode.Strict });
             HttpContext.Response.Cookies.Append(
                 "X-Refresh-Token",
-                newAppUser.RefreshToken,
+                appUser.RefreshToken,
                 new CookieOptions { HttpOnly = true, SameSite = SameSiteMode.Strict });
 
             var message = new
@@ -44,34 +49,34 @@ namespace EmployeeApp.Api.Controllers
                 title = HttpContext.Request.RouteValues,
                 statusCode = HttpContext.Response.StatusCode,
                 message = "Logged in successfully",
-                data = newAppUser,
+                data = appUser,
             };
             _rabbitMqController.CreateMessage(message);
 
-            return Ok(newAppUser);
+            return Ok(authResponse);
         }
 
         [HttpPost("refresh")]
-        public async Task<ActionResult<AppUserDto>> Refresh()
+        public async Task<ActionResult<AuthResponse>> Refresh()
         {
             if (!(Request.Cookies.TryGetValue("X-Username", out string username) &&
                 Request.Cookies.TryGetValue("X-Refresh-Token", out string refreshToken)))
-                return BadRequest("Your request is declined");
+                return Unauthorized("Your request is declined");
 
-            AppUserRefreshDto refreshUserDto = new() { Username = username, RefreshToken = refreshToken };
+            AppUserDto refreshedAppUser = await _authService.Refresh(username, refreshToken);
 
-            AppUserDto refreshedAppUser = await _authService.Refresh(refreshUserDto);
+            AuthResponse authResponse = _mapper.Map<AuthResponse>(refreshedAppUser);
 
-            if (refreshedAppUser == null)
-                return BadRequest("Refresh token is invalid");
+            if (authResponse == null)
+                return Unauthorized("Refresh token is invalid");
 
             Response.Cookies.Append(
                 "X-Username",
-                refreshedAppUser.Username,
+                authResponse.Username,
                 new CookieOptions { HttpOnly = true, SameSite = SameSiteMode.Strict });
             Response.Cookies.Append(
                 "X-Access-Token",
-                refreshedAppUser.AccessToken,
+                authResponse.AccessToken,
                 new CookieOptions { HttpOnly = true, SameSite = SameSiteMode.Strict });
             Response.Cookies.Append(
                 "X-Refresh-Token",
@@ -90,7 +95,7 @@ namespace EmployeeApp.Api.Controllers
             };
             _rabbitMqController.CreateMessage(message);
 
-            return Ok(refreshedAppUser);
+            return Ok(authResponse);
         }
 
         [HttpPost("logout")]
@@ -98,7 +103,7 @@ namespace EmployeeApp.Api.Controllers
         {
             if (!(Request.Cookies["X-Username"] != null &&
                 Request.Cookies.TryGetValue("X-Refresh-Token", out string refreshToken)))
-                return BadRequest("Your request is declined");
+                return Unauthorized("Your request is declined");
 
             bool isLoggedout = await _authService.Logout(refreshToken);
 
