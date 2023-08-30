@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using EmployeeApp.Domain.Entities;
+using EmployeeApp.Service.DTOs.AppUser;
 using EmployeeApp.Service.DTOs.Company;
 using EmployeeApp.Service.DTOs.Employee;
 
@@ -18,6 +19,8 @@ namespace EmployeeApp.Service.Mapper.Profiles
             CreateMap<Employee, EmployeeDto>().ReverseMap();
             CreateMap<CreateEmployeeDto, Employee>();
             CreateMap<UpdateEmployeeDto, Employee>();
+
+            CreateMap<AppUserDto, AuthResponse>();
         }
     }
 }

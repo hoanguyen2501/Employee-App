@@ -66,10 +66,10 @@ export class EmployeeAddComponent implements OnInit, PendingChangesGuard {
         next: (response) => {
           this.employeeForm.reset();
           this.formGroupDirective.resetForm();
-          this.toastr.success('Created successfully', 'Success');
+          this.toastr.success('Created successfully');
         },
         error: (error) => {
-          this.toastr.error('Failed to create', 'Failure');
+          this.toastr.error('Failed to create');
           console.log(error);
         },
       });
@@ -94,10 +94,20 @@ export class EmployeeAddComponent implements OnInit, PendingChangesGuard {
       address: ['', Validators.required],
       city: ['', Validators.required],
       country: ['', Validators.required],
-      email: ['', Validators.required],
+      email: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(/^[\d\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/),
+        ],
+      ],
       phoneNumber: [
         '',
-        [Validators.required, Validators.pattern(/(^[0-9]{10,15})+$/)],
+        [
+          Validators.required,
+          Validators.minLength(10),
+          Validators.pattern(/^[\d]*$/),
+        ],
       ],
     });
   }

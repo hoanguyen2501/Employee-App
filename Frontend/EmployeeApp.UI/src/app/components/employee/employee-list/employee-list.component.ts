@@ -15,12 +15,9 @@ export class EmployeeListComponent implements OnInit, AfterViewInit {
 
   displayedColumns = [
     'fullName',
-    // 'lastName',
     'dateOfBirth',
     'gender',
     'address',
-    // 'city',
-    // 'country',
     'email',
     'phoneNumber',
     'hiredAt',
@@ -83,11 +80,11 @@ export class EmployeeListComponent implements OnInit, AfterViewInit {
               this.dataSource.data = this.employees.filter((item) => {
                 return item.id !== employeeId;
               });
-              this.toastr.success('Delete successfully', 'Success');
+              this.toastr.success('Delete successfully');
             },
             error: (error) => {
               console.log(error);
-              this.toastr.error('Failed to delete', 'Error');
+              this.toastr.error('Failed to delete');
             },
           });
         }
@@ -102,6 +99,4 @@ export class EmployeeListComponent implements OnInit, AfterViewInit {
     const result = s.replace(/([A-Z])/g, ' $1');
     return result.charAt(0).toUpperCase() + result.slice(1);
   }
-
-  openDialog(action: string, row: any) {}
 }

@@ -73,8 +73,21 @@ export class CompanyAddComponent implements OnInit, PendingChangesGuard {
       address: ['', Validators.required],
       city: ['', Validators.required],
       country: ['', Validators.required],
-      email: ['', Validators.required],
-      phoneNumber: ['', Validators.required],
+      email: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(/^[\d\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/),
+        ],
+      ],
+      phoneNumber: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(10),
+          Validators.pattern(/^[\d]*$/),
+        ],
+      ],
     });
   }
 

@@ -14,7 +14,7 @@ namespace EmployeeApp.Service.Services
             _config = config;
         }
 
-        public async Task<AppUserDto> Login(AppUserLoginDto loginDto)
+        public async Task<AppUserDto> Login(AuthRequest loginDto)
         {
             string realm = _config["Keycloak:realm"];
             string clientId = _config["Keycloak:resource"];
@@ -52,7 +52,7 @@ namespace EmployeeApp.Service.Services
             };
         }
 
-        public async Task<AppUserDto> Refresh(AppUserRefreshDto refreshUserDto)
+        public async Task<AppUserDto> Refresh(string username, string refreshToken)
         {
             string realm = _config["Keycloak:realm"];
             string clientId = _config["Keycloak:resource"];
@@ -65,7 +65,7 @@ namespace EmployeeApp.Service.Services
                 {"client_id", clientId},
                 {"grant_type", "refresh_token"},
                 {"client_secret", secret},
-                {"refresh_token", refreshUserDto.RefreshToken},
+                {"refresh_token", refreshToken},
             };
 
             using HttpClient httpClient = new();
@@ -83,9 +83,9 @@ namespace EmployeeApp.Service.Services
 
             return new AppUserDto
             {
-                Username = refreshUserDto.Username,
+                Username = username,
                 AccessToken = resultDic["access_token"],
-                RefreshToken = refreshUserDto.RefreshToken
+                RefreshToken = refreshToken
             };
         }
 

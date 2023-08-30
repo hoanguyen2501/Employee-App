@@ -33,20 +33,20 @@ export class LoginComponent implements OnInit {
 
   initialize(): void {
     this.loginForm = this.formBuilder.group({
-      username: [null, [Validators.required]],
-      password: [null, [Validators.required]],
+      username: [null, [Validators.required, Validators.minLength(4)]],
+      password: [null, [Validators.required, Validators.minLength(4)]],
     });
   }
 
   onSubmit(): void {
     this.authService.login(this.loginForm.value).subscribe({
-      next: (user) => {
-        this.toastr.success('Logged in successfully', 'Login');
-        this.authService.autoLogout();
+      next: () => {
+        this.toastr.success('Logged in successfully');
         this.router.navigate(['']);
       },
       error: (error) => {
-        this.toastr.error(error.error, 'Failure');
+        if (typeof error.error === 'string') this.toastr.error(error.error);
+        else this.toastr.error('Internal server error');
       },
     });
   }

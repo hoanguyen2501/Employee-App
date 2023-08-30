@@ -1,8 +1,5 @@
 <ng-container>
   <div class="content">
-    <mat-card-title class="content-title"
-      >Edit employee information</mat-card-title
-    >
     <ng-container *ngIf="employee">
       <button
         mat-raised-button
@@ -28,6 +25,9 @@
         *ngIf="employee"
       >
         <mat-card class="employee-form-card shadow bg-body rounded">
+          <mat-card-title class="content-title"
+            >Edit employee information</mat-card-title
+          >
           <mat-card-content class="fs-5">
             <div class="row">
               <div class="col">
