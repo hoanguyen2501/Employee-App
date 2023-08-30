@@ -42,7 +42,6 @@ export class LoginComponent implements OnInit {
     this.authService.login(this.loginForm.value).subscribe({
       next: () => {
         this.toastr.success('Logged in successfully', 'Login');
-        this.authService.autoLogout();
         this.router.navigate(['']);
       },
       error: (error) => {

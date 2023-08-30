@@ -8,7 +8,7 @@ import {
 } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, map } from 'rxjs';
+import { BehaviorSubject, Observable, map, of } from 'rxjs';
 import { AuthAppUser } from '../models/AppUser/authAppUser';
 import { AuthService } from '../services/auth.service';
 
@@ -16,14 +16,11 @@ import { AuthService } from '../services/auth.service';
   providedIn: 'root',
 })
 export class AuthGuard implements CanActivate {
-  user: AuthAppUser | undefined;
   constructor(
     private authService: AuthService,
     private toastr: ToastrService,
     private router: Router
-  ) {
-    this.user;
-  }
+  ) {}
 
   canActivate(
     route: ActivatedRouteSnapshot,
@@ -36,17 +33,24 @@ export class AuthGuard implements CanActivate {
     const isAuthenticated = this.authService.currentUser$.pipe(
       map((user) => {
         if (user) {
-          var jwtHelper = new JwtHelperService();
+          let isRefreshed = true;
+          const jwtHelper = new JwtHelperService();
           if (jwtHelper.isTokenExpired(user.accessToken)) {
-            this.toastr.warning(
-              'Your session is expired. Please login agin!',
-              'Warning'
-            );
-            this.authService.logout();
-            return false;
+            this.authService.refresh().subscribe({
+              next: (user) => {
+                isRefreshed = true;
+              },
+              error: () => {
+                this.toastr.error(
+                  'Your session is expired, please login again to continue!'
+                );
+                this.authService.logout();
+                isRefreshed = false;
+              },
+            });
           }
 
-          return true;
+          return isRefreshed;
         } else {
           this.router.navigate(['/login']);
           return false;

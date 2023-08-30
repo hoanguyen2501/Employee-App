@@ -1,16 +1,27 @@
 import {
+  HttpClient,
+  HttpErrorResponse,
   HttpEvent,
   HttpHandler,
   HttpInterceptor,
   HttpRequest,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, catchError, switchMap, throwError } from 'rxjs';
 import { TokenStorageService } from '../services/token-storage.service';
+import { AuthAppUser } from '../models/AppUser/authAppUser';
+import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private tokenStorage: TokenStorageService) {}
+  constructor(
+    private authService: AuthService,
+    private tokenStorage: TokenStorageService,
+    private toastr: ToastrService,
+    private router: Router
+  ) {}
 
   intercept(
     request: HttpRequest<unknown>,
@@ -18,15 +29,43 @@ export class AuthInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<unknown>> {
     const token = this.tokenStorage.getToken();
     if (token) {
-      const authRequest = request.clone({
-        setHeaders: {
-          Authorization: `Bearer ${token}`,
-        },
-        withCredentials: true,
-      });
-      return next.handle(authRequest);
+      const authRequest = this.setAuthHeader(request, token);
+      return next.handle(authRequest).pipe(
+        catchError((error: HttpErrorResponse) => {
+          if (
+            error.status === 401 &&
+            request.url.split('/').pop() !== 'refresh'
+          ) {
+            return this.authService.refresh().pipe(
+              switchMap((response: AuthAppUser) => {
+                this.tokenStorage.storeUser(response);
+                this.authService.setCurrentUser(response);
+                this.router.navigateByUrl(this.router.url);
+                const newAuthRequest = this.setAuthHeader(
+                  request,
+                  response.accessToken
+                );
+                return next.handle(newAuthRequest);
+              })
+            );
+          } else {
+            return throwError(() => error);
+          }
+        })
+      );
     }
-
     return next.handle(request);
+  }
+
+  private setAuthHeader(
+    request: HttpRequest<unknown>,
+    accessToken: string
+  ): HttpRequest<unknown> {
+    return request.clone({
+      setHeaders: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      withCredentials: true,
+    });
   }
 }

@@ -14,13 +14,13 @@ export class AppComponent implements OnInit {
   currentUser$: Observable<AuthAppUser | null> = of(null);
 
   constructor(private authService: AuthService, private router: Router) {
-    this.router.events
-      .pipe(filter((rs): rs is NavigationEnd => rs instanceof NavigationEnd))
-      .subscribe((events) => {
-        if (events.id === 1 && events.urlAfterRedirects == events.url) {
-          this.authService.autoLogout();
-        }
-      });
+    // this.router.events
+    //   .pipe(filter((rs): rs is NavigationEnd => rs instanceof NavigationEnd))
+    //   .subscribe((events) => {
+    //     if (events.id === 1 && events.urlAfterRedirects == events.url) {
+    //       this.authService.autoLogout();
+    //     }
+    //   });
   }
 
   ngOnInit(): void {

@@ -46,25 +46,17 @@ export class AuthService {
   }
 
   refresh() {
-    return this.http
-      .post<AuthAppUser>(this.baseUrl + 'auth/refresh', {}, this.httpOptions)
-      .pipe(
-        map((response: AuthAppUser) => {
-          const user = response;
-          if (user) {
-            this.tokenService.storeUser(user);
-            this.setCurrentUser(user);
-          }
-        })
-      );
+    return this.http.post<AuthAppUser>(
+      this.baseUrl + 'auth/refresh',
+      {},
+      this.httpOptions
+    );
   }
 
   logout(): void {
     this.http
       .post(this.baseUrl + 'auth/logout', {}, this.httpOptions)
-      .subscribe({
-        next: () => window.location.reload(),
-      });
+      .subscribe();
     this.tokenService.clearStorage();
     this.currentUserSource.next(null);
     this.router.navigate(['/login']);

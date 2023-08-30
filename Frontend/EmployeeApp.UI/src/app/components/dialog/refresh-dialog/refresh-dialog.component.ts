@@ -20,16 +20,16 @@ export class RefreshDialogComponent {
   }
 
   onRefresh(): void {
-    this.authService.refresh().subscribe({
-      next: () => {
-        this.authService.autoLogout();
-        this.router.navigateByUrl(this.router.url);
-        this.toastr.success('Your session was refreshed!');
-      },
-      error: () => {
-        this.toastr.error('Cannot refresh your session, please login again!');
-        this.authService.logout();
-      },
-    });
+    // this.authService.refresh().subscribe({
+    //   next: () => {
+    //     this.authService.autoLogout();
+    //     this.router.navigateByUrl(this.router.url);
+    //     this.toastr.success('Your session was refreshed!');
+    //   },
+    //   error: () => {
+    //     this.toastr.error('Cannot refresh your session, please login again!');
+    //     this.authService.logout();
+    //   },
+    // });
   }
 }
