@@ -1,6 +1,5 @@
 <ng-container>
   <div class="content">
-    <mat-card-title class="content-title">Employee information</mat-card-title>
     <button mat-raised-button type="button" routerLink="/employee">
       <mat-icon>arrow_back</mat-icon>
     </button>
@@ -11,6 +10,9 @@
       *ngIf="employee"
     >
       <mat-card class="employee-form-card shadow bg-body rounded">
+        <mat-card-title class="content-title"
+          >Employee information</mat-card-title
+        >
         <mat-card-content class="fs-5">
           <div class="row">
             <div class="col">

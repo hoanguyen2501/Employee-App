@@ -1,17 +1,17 @@
 <ng-container>
   <div class="content">
-    <mat-card-title class="content-title">Employee list</mat-card-title>
-    <div class="button-container my-3">
+    <div class="button-container mb-4">
       <button mat-raised-button (click)="gotoAddingPage()" color="primary">
         Add new employee
       </button>
     </div>
+    <mat-card-title class="content-title">Employee list</mat-card-title>
     <ng-container *ngIf="!(employees.length > 0)">
       <p class="text-center fs-3 my-4">Not employees found</p>
     </ng-container>
     <ng-container>
       <table
-        class="mat-elevation-z8"
+        class="mat-elevation-z8 mt-3"
         mat-table
         [dataSource]="dataSource"
         *ngIf="employees.length > 0"

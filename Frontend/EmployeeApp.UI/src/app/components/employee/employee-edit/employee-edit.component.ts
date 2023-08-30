@@ -82,8 +82,21 @@ export class EmployeeEditComponent implements OnInit, PendingChangesGuard {
       address: ['', Validators.required],
       city: ['', Validators.required],
       country: ['', Validators.required],
-      email: ['', Validators.required],
-      phoneNumber: ['', Validators.required],
+      email: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(/^[\d\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/),
+        ],
+      ],
+      phoneNumber: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(10),
+          Validators.pattern(/^[\d]*$/),
+        ],
+      ],
     });
   }
 
@@ -95,10 +108,10 @@ export class EmployeeEditComponent implements OnInit, PendingChangesGuard {
           next: (updatedEmployee) => {
             this.employee = updatedEmployee;
             this.employeeForm.reset(updatedEmployee);
-            this.toastr.success('Updated successfully', 'Success');
+            this.toastr.success('Updated successfully');
           },
           error: (error) => {
-            this.toastr.error('Failed to update', 'Failure');
+            this.toastr.error('Failed to update');
             console.log(error);
           },
         });

@@ -41,11 +41,12 @@ export class LoginComponent implements OnInit {
   onSubmit(): void {
     this.authService.login(this.loginForm.value).subscribe({
       next: () => {
-        this.toastr.success('Logged in successfully', 'Login');
+        this.toastr.success('Logged in successfully');
         this.router.navigate(['']);
       },
       error: (error) => {
-        this.toastr.error(error.error, 'Failure');
+        if (typeof error.error === 'string') this.toastr.error(error.error);
+        else this.toastr.error('Internal server error');
       },
     });
   }

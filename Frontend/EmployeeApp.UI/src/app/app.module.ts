@@ -8,7 +8,6 @@ import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
@@ -29,7 +28,6 @@ import { CompanyAddComponent } from './components/company/company-add/company-ad
 import { CompanyDetailsComponent } from './components/company/company-details/company-details.component';
 import { CompanyEditComponent } from './components/company/company-edit/company-edit.component';
 import { CompanyListComponent } from './components/company/company-list/company-list.component';
-import { RefreshDialogComponent } from './components/dialog/refresh-dialog/refresh-dialog.component';
 import { EmployeeAddComponent } from './components/employee/employee-add/employee-add.component';
 import { EmployeeDetailsComponent } from './components/employee/employee-details/employee-details.component';
 import { EmployeeEditComponent } from './components/employee/employee-edit/employee-edit.component';
@@ -62,7 +60,6 @@ import { LoadingInterceptor } from './interceptors/loading.interceptor';
     LoginComponent,
     BadRequestComponent,
     TextInputComponent,
-    RefreshDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -92,7 +89,6 @@ import { LoadingInterceptor } from './interceptors/loading.interceptor';
     MatDatepickerModule,
     MatNativeDateModule,
     MatMenuModule,
-    MatDialogModule,
     ReactiveFormsModule,
     NgxSpinnerModule.forRoot({
       type: 'ball-spin-clockwise',
