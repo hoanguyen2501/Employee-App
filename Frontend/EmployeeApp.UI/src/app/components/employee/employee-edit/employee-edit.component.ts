@@ -14,6 +14,7 @@ import {
 } from 'src/app/guards/pending-changes.guard';
 import { Employee } from 'src/app/models/employee';
 import { CompanyService } from 'src/app/services/company.service';
+import { DateFormatService } from 'src/app/services/date-format.service';
 import { EmployeeService } from 'src/app/services/employee.service';
 
 @Component({
@@ -47,6 +48,7 @@ export class EmployeeEditComponent implements OnInit, PendingChangesGuard {
     private route: ActivatedRoute,
     private employeeService: EmployeeService,
     private companyService: CompanyService,
+    private dateFormatter: DateFormatService,
     private toastr: ToastrService
   ) {}
 
@@ -102,6 +104,9 @@ export class EmployeeEditComponent implements OnInit, PendingChangesGuard {
 
   onSubmit(): void {
     if (this.employeeForm.dirty && this.employeeForm.valid) {
+      this.employeeForm.value['dateOfBirth'] = new Date(
+        this.dateFormatter.setDate(this.employeeForm.value['dateOfBirth'])
+      );
       this.employeeService
         .editEmployee(this.employeeId, this.employeeForm.value)
         .subscribe({

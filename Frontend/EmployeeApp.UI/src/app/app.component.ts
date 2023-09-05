@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
-import { Observable, filter, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { AuthAppUser } from './models/AppUser/authAppUser';
 import { AuthService } from './services/auth.service';
 
@@ -13,15 +12,7 @@ export class AppComponent implements OnInit {
   title = 'EmployeeApp.UI';
   currentUser$: Observable<AuthAppUser | null> = of(null);
 
-  constructor(private authService: AuthService, private router: Router) {
-    // this.router.events
-    //   .pipe(filter((rs): rs is NavigationEnd => rs instanceof NavigationEnd))
-    //   .subscribe((events) => {
-    //     if (events.id === 1 && events.urlAfterRedirects == events.url) {
-    //       this.authService.autoLogout();
-    //     }
-    //   });
-  }
+  constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
     this.currentUser$ = this.authService.currentUser$;

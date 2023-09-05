@@ -14,6 +14,7 @@ import {
 } from 'src/app/guards/pending-changes.guard';
 import { Company } from 'src/app/models/company';
 import { CompanyService } from 'src/app/services/company.service';
+import { DateFormatService } from 'src/app/services/date-format.service';
 
 @Component({
   selector: 'app-company-edit',
@@ -38,7 +39,8 @@ export class CompanyEditComponent implements OnInit, PendingChangesGuard {
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private companyService: CompanyService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private dateFormatter: DateFormatService
   ) {}
 
   ngOnInit(): void {
@@ -89,6 +91,10 @@ export class CompanyEditComponent implements OnInit, PendingChangesGuard {
 
   onSubmit(): void {
     if (this.companyForm.dirty && this.companyForm.valid) {
+      this.companyForm.value['establishedAt'] = new Date(
+        this.dateFormatter.setDate(this.companyForm.value['establishedAt'])
+      );
+
       this.companyService
         .editCompany(this.companyId, this.companyForm.value)
         .subscribe({

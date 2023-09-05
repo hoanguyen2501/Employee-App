@@ -12,6 +12,7 @@ import {
   PendingChangesGuard,
 } from 'src/app/guards/pending-changes.guard';
 import { CompanyService } from 'src/app/services/company.service';
+import { DateFormatService } from 'src/app/services/date-format.service';
 
 @Component({
   selector: 'app-company-add',
@@ -33,7 +34,8 @@ export class CompanyAddComponent implements OnInit, PendingChangesGuard {
   constructor(
     private formBuilder: FormBuilder,
     private companyService: CompanyService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private dateFormatter: DateFormatService
   ) {}
 
   canDeactivate(
@@ -50,6 +52,9 @@ export class CompanyAddComponent implements OnInit, PendingChangesGuard {
 
   onSubmit(): void {
     if (this.companyForm.dirty && this.companyForm.valid) {
+      this.companyForm.value['establishedAt'] = new Date(
+        this.dateFormatter.setDate(this.companyForm.value['establishedAt'])
+      );
       this.companyService.addCompany(this.companyForm.value).subscribe({
         next: (response) => {
           this.companyForm.reset();

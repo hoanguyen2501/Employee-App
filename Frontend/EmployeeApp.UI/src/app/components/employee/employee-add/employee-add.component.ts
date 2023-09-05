@@ -5,7 +5,6 @@ import {
   FormGroupDirective,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import {
@@ -13,6 +12,7 @@ import {
   PendingChangesGuard,
 } from 'src/app/guards/pending-changes.guard';
 import { CompanyService } from 'src/app/services/company.service';
+import { DateFormatService } from 'src/app/services/date-format.service';
 import { EmployeeService } from 'src/app/services/employee.service';
 
 @Component({
@@ -43,7 +43,7 @@ export class EmployeeAddComponent implements OnInit, PendingChangesGuard {
     private formBuilder: FormBuilder,
     private companyService: CompanyService,
     private employeeService: EmployeeService,
-    private router: Router,
+    private dateFormatter: DateFormatService,
     private toastr: ToastrService
   ) {}
 
@@ -62,6 +62,9 @@ export class EmployeeAddComponent implements OnInit, PendingChangesGuard {
 
   onSubmit(): void {
     if (this.employeeForm.dirty && this.employeeForm.valid) {
+      this.employeeForm.value['dateOfBirth'] = new Date(
+        this.dateFormatter.setDate(this.employeeForm.value['dateOfBirth'])
+      );
       this.employeeService.addEmployee(this.employeeForm.value).subscribe({
         next: (response) => {
           this.employeeForm.reset();
