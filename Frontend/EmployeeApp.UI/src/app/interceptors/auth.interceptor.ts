@@ -1,5 +1,4 @@
 import {
-  HttpClient,
   HttpErrorResponse,
   HttpEvent,
   HttpHandler,
@@ -7,12 +6,12 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, switchMap, throwError } from 'rxjs';
-import { TokenStorageService } from '../services/token-storage.service';
-import { AuthAppUser } from '../models/AppUser/authAppUser';
-import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { Observable, catchError, switchMap, throwError } from 'rxjs';
+import { AuthAppUser } from '../models/AppUser/authAppUser';
+import { AuthService } from '../services/auth.service';
+import { TokenStorageService } from '../services/token-storage.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {

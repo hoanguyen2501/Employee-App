@@ -17,13 +17,15 @@ namespace EmployeeApp.Api.Extensions
 
             app.UseMiddleware<ExceptionMiddleware>();
 
+            app.UseMiddleware<JwtMiddleware>();
+
             app.UseMiddleware<TransactionMiddleware>();
 
-            app.UseHttpsRedirection();
-
-            app.UseAuthentication();
+            //app.UseAuthentication();
 
             app.UseAuthorization();
+
+            app.UseHttpsRedirection();
 
             app.MapControllers();
 

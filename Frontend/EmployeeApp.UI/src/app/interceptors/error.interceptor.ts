@@ -7,12 +7,12 @@ import {
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
 import { Observable, catchError } from 'rxjs';
+import { AuthService } from '../services/auth.service';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
-  constructor(private router: Router, private toastr: ToastrService) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   intercept(
     request: HttpRequest<unknown>,
@@ -22,6 +22,12 @@ export class ErrorInterceptor implements HttpInterceptor {
       catchError((error: HttpErrorResponse) => {
         if (error) {
           switch (error.status) {
+            // case 401:
+            //   if (
+            //     request.url.split('/').pop()?.toLocaleLowerCase() === 'refresh'
+            //   )
+            //     this.authService.logout();
+            //   break;
             case 400:
               this.router.navigateByUrl('/bad-request');
               break;

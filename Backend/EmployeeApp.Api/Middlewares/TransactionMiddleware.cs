@@ -36,7 +36,6 @@ namespace EmployeeApp.Api.Middlewares
                     await transaction.RollbackAsync();
                     _logger.LogError("Somethings went wrong during committing transaction");
                 }
-
             }
         }
     }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EmployeeApp.Service.DTOs.AppUser;
 using EmployeeApp.Service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeeApp.Api.Controllers
@@ -19,6 +20,7 @@ namespace EmployeeApp.Api.Controllers
             _mapper = mapper;
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<ActionResult<AuthResponse>> Login(AuthRequest loginDto)
         {
@@ -56,6 +58,7 @@ namespace EmployeeApp.Api.Controllers
             return Ok(authResponse);
         }
 
+        [Authorize]
         [HttpPost("refresh")]
         public async Task<ActionResult<AuthResponse>> Refresh()
         {
@@ -98,6 +101,7 @@ namespace EmployeeApp.Api.Controllers
             return Ok(authResponse);
         }
 
+        [AllowAnonymous]
         [HttpPost("logout")]
         public async Task<ActionResult> Logout()
         {

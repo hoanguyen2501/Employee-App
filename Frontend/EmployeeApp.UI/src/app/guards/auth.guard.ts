@@ -6,11 +6,10 @@ import {
   RouterStateSnapshot,
   UrlTree,
 } from '@angular/router';
-import { JwtHelperService } from '@auth0/angular-jwt';
 import { ToastrService } from 'ngx-toastr';
-import { BehaviorSubject, Observable, map, of } from 'rxjs';
-import { AuthAppUser } from '../models/AppUser/authAppUser';
+import { Observable, map } from 'rxjs';
 import { AuthService } from '../services/auth.service';
+import { TokenStorageService } from '../services/token-storage.service';
 
 @Injectable({
   providedIn: 'root',
@@ -18,6 +17,7 @@ import { AuthService } from '../services/auth.service';
 export class AuthGuard implements CanActivate {
   constructor(
     private authService: AuthService,
+    private tokenService: TokenStorageService,
     private toastr: ToastrService,
     private router: Router
   ) {}
@@ -33,24 +33,27 @@ export class AuthGuard implements CanActivate {
     const isAuthenticated = this.authService.currentUser$.pipe(
       map((user) => {
         if (user) {
-          let isRefreshed = true;
-          const jwtHelper = new JwtHelperService();
-          if (jwtHelper.isTokenExpired(user.accessToken)) {
-            this.authService.refresh().subscribe({
-              next: (user) => {
-                isRefreshed = true;
-              },
-              error: () => {
-                this.toastr.error(
-                  'Your session is expired, please login again to continue!'
-                );
-                this.authService.logout();
-                isRefreshed = false;
-              },
-            });
-          }
+          // let isRefreshed = true;
+          // const jwtHelper = new JwtHelperService();
+          // if (jwtHelper.isTokenExpired(user.accessToken)) {
+          //   this.authService.refresh().subscribe({
+          //     next: (user: AuthAppUser) => {
+          //       isRefreshed = true;
+          //       this.tokenService.storeUser(user);
+          //       this.authService.setCurrentUser(user);
+          //     },
+          //     error: () => {
+          //       this.toastr.error(
+          //         'Your session is expired, please login again to continue!'
+          //       );
+          //       this.authService.logout();
+          //       isRefreshed = false;
+          //     },
+          //   });
+          // }
 
-          return isRefreshed;
+          // return isRefreshed;
+          return true;
         } else {
           this.router.navigate(['/login']);
           return false;

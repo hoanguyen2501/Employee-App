@@ -13,7 +13,8 @@ export class DateFormatService {
     return formattedDate.toString();
   }
 
-  setDate(date: Date) {
+  setDate(date: Date | string) {
+    date = new Date(date);
     const timeOffset = Math.abs(date.getTimezoneOffset());
     const hoursOffset = timeOffset / 60;
     const minutesOffset = timeOffset % 60;
