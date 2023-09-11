@@ -45,6 +45,11 @@ export class AuthInterceptor implements HttpInterceptor {
                   response.accessToken
                 );
                 return next.handle(newAuthRequest);
+              }),
+              catchError((error: HttpErrorResponse) => {
+                this.authService.logout();
+                this.toastr.warning(error.message);
+                return throwError(() => error);
               })
             );
           } else {

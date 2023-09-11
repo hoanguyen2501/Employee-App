@@ -20,13 +20,11 @@ namespace EmployeeApp.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<List<EmployeeDto>>> GetEmployees()
         {
-            List<EmployeeDto> companies = await _employeeService.GetEmployeesAsync();
-            if (companies == null)
-                return BadRequest();
-            else if (companies.Count == 0)
+            List<EmployeeDto> employees = await _employeeService.GetEmployeesAsync();
+            if (employees == null || employees.Count == 0)
                 return NotFound();
 
-            return Ok(companies);
+            return Ok(employees);
         }
 
         [HttpGet("{id}")]

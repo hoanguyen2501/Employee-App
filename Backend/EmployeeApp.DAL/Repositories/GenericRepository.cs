@@ -52,6 +52,13 @@ namespace EmployeeApp.DAL.Repositories
             return await _dbSet.Where(expression).Include(includes => includes).FirstOrDefaultAsync();
         }
 
+        public async Task<bool> IsExistedValue(Expression<Func<TEntity, bool>> expression)
+        {
+            if (expression == null) return false;
+
+            return await _dbSet.Where(expression).FirstOrDefaultAsync() != null;
+        }
+
         public async Task InsertAsync(TEntity entity)
         {
             await _dbSet.AddAsync(entity);

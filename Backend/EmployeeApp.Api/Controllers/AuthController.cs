@@ -30,26 +30,26 @@ namespace EmployeeApp.Api.Controllers
 
             AuthResponse authResponse = _mapper.Map<AuthResponse>(appUser);
 
-            HttpContext.Response.Cookies.Append(
+            Response.Cookies.Append(
                 "X-Username",
                 authResponse.Username,
                 new CookieOptions { HttpOnly = true, SameSite = SameSiteMode.Strict });
-            HttpContext.Response.Cookies.Append(
+            Response.Cookies.Append(
                 "X-Access-Token",
                 authResponse.AccessToken,
                 new CookieOptions { HttpOnly = true, SameSite = SameSiteMode.Strict });
-            HttpContext.Response.Cookies.Append(
+            Response.Cookies.Append(
                 "X-Refresh-Token",
                 appUser.RefreshToken,
                 new CookieOptions { HttpOnly = true, SameSite = SameSiteMode.Strict });
 
             var message = new
             {
-                host = HttpContext.Request.Host.ToString(),
-                path = HttpContext.Request.Path,
-                method = HttpContext.Request.Method,
-                title = HttpContext.Request.RouteValues,
-                statusCode = HttpContext.Response.StatusCode,
+                host = Request.Host.ToString(),
+                path = Request.Path,
+                method = Request.Method,
+                title = Request.RouteValues,
+                statusCode = Response.StatusCode,
                 message = "Logged in successfully",
                 data = appUser,
             };
@@ -88,11 +88,11 @@ namespace EmployeeApp.Api.Controllers
 
             var message = new
             {
-                host = HttpContext.Request.Host.ToString(),
-                path = HttpContext.Request.Path,
-                method = HttpContext.Request.Method,
-                title = HttpContext.Request.RouteValues,
-                statusCode = HttpContext.Response.StatusCode,
+                host = Request.Host.ToString(),
+                path = Request.Path,
+                method = Request.Method,
+                title = Request.RouteValues,
+                statusCode = Response.StatusCode,
                 message = "Refresh access token successfully",
                 data = refreshedAppUser,
             };

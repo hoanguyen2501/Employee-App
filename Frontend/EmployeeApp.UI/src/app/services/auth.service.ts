@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { JwtHelperService } from '@auth0/angular-jwt';
 import { BehaviorSubject, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { AuthAppUser } from '../models/AppUser/authAppUser';
@@ -17,7 +16,6 @@ export class AuthService {
   httpOptions = {
     withCredentials: true,
   };
-  jwtHelper = new JwtHelperService();
   constructor(
     private http: HttpClient,
     private router: Router,

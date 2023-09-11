@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import {
   FormBuilder,
@@ -66,16 +67,38 @@ export class CompanyEditComponent implements OnInit, PendingChangesGuard {
 
   initialForm() {
     this.companyForm = this.formBuilder.group({
-      companyName: ['', Validators.required],
-      establishedAt: ['', Validators.required],
-      address: ['', Validators.required],
-      city: ['', Validators.required],
-      country: ['', Validators.required],
+      companyName: ['', [Validators.required, Validators.minLength(4)]],
+      establishedAt: ['', [Validators.required]],
+      address: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(4),
+          Validators.maxLength(100),
+        ],
+      ],
+      city: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(4),
+          Validators.maxLength(50),
+        ],
+      ],
+      country: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(4),
+          Validators.maxLength(50),
+        ],
+      ],
       email: [
         '',
         [
           Validators.required,
           Validators.pattern(/^[\d\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/),
+          Validators.email,
         ],
       ],
       phoneNumber: [
@@ -84,6 +107,7 @@ export class CompanyEditComponent implements OnInit, PendingChangesGuard {
           Validators.required,
           Validators.minLength(10),
           Validators.pattern(/^[\d]*$/),
+          Validators.maxLength(12),
         ],
       ],
     });
@@ -98,13 +122,13 @@ export class CompanyEditComponent implements OnInit, PendingChangesGuard {
       this.companyService
         .editCompany(this.companyId, this.companyForm.value)
         .subscribe({
-          next: (updatedCompany) => {
+          next: (updatedCompany: Company) => {
             this.company = updatedCompany;
             this.companyForm.reset(updatedCompany);
             this.toastr.success('Updated successfully');
           },
-          error: (error) => {
-            this.toastr.error('Failed to update');
+          error: (error: HttpErrorResponse) => {
+            this.toastr.error(error.error);
             console.log(error);
           },
         });

@@ -49,15 +49,69 @@ export class EmployeeDetailsComponent implements OnInit {
   initialForm() {
     this.employeeForm = this.formBuilder.group({
       companyId: [{ value: null, disabled: true }, Validators.required],
-      firstName: [{ value: '', disabled: true }, Validators.required],
-      lastName: [{ value: '', disabled: true }, Validators.required],
+      firstName: [
+        { value: '', disabled: true },
+        [
+          Validators.required,
+          Validators.pattern(/^[A-Za-z]+$/),
+          Validators.minLength(4),
+          Validators.maxLength(100),
+        ],
+      ],
+      lastName: [
+        { value: '', disabled: true },
+        [
+          Validators.required,
+          Validators.pattern(/^[A-Za-z]+$/),
+          Validators.minLength(4),
+          Validators.maxLength(100),
+        ],
+      ],
       gender: [{ value: null, disabled: true }, Validators.required],
-      dateOfBirth: [{ value: '', disabled: true }, Validators.required],
-      address: [{ value: '', disabled: true }, Validators.required],
-      city: [{ value: '', disabled: true }, Validators.required],
-      country: [{ value: '', disabled: true }, Validators.required],
-      email: [{ value: '', disabled: true }, Validators.required],
-      phoneNumber: [{ value: '', disabled: true }, Validators.required],
+      dateOfBirth: [{ value: '', disabled: true }, , Validators.required],
+      address: [
+        { value: '', disabled: true },
+        [
+          Validators.required,
+          Validators.minLength(4),
+          Validators.maxLength(100),
+        ],
+      ],
+      city: [
+        { value: '', disabled: true },
+        [
+          Validators.required,
+          Validators.minLength(4),
+          Validators.maxLength(100),
+        ],
+      ],
+      country: [
+        { value: '', disabled: true },
+        [
+          Validators.required,
+          Validators.minLength(4),
+          Validators.maxLength(100),
+          Validators.pattern(/^[A-Za-z]+$/),
+        ],
+      ],
+      email: [
+        { value: '', disabled: true },
+        [
+          Validators.required,
+          Validators.pattern(/^[\d\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/),
+          Validators.maxLength(50),
+          Validators.email,
+        ],
+      ],
+      phoneNumber: [
+        { value: '', disabled: true },
+        [
+          Validators.required,
+          Validators.pattern(/^[\d]*$/),
+          Validators.minLength(10),
+          Validators.maxLength(12),
+        ],
+      ],
     });
   }
 
