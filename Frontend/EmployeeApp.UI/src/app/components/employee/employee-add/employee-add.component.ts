@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import {
   FormBuilder,
@@ -5,7 +6,6 @@ import {
   FormGroupDirective,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import {
@@ -13,6 +13,7 @@ import {
   PendingChangesGuard,
 } from 'src/app/guards/pending-changes.guard';
 import { CompanyService } from 'src/app/services/company.service';
+import { DateFormatService } from 'src/app/services/date-format.service';
 import { EmployeeService } from 'src/app/services/employee.service';
 
 @Component({
@@ -43,7 +44,7 @@ export class EmployeeAddComponent implements OnInit, PendingChangesGuard {
     private formBuilder: FormBuilder,
     private companyService: CompanyService,
     private employeeService: EmployeeService,
-    private router: Router,
+    private dateFormatter: DateFormatService,
     private toastr: ToastrService
   ) {}
 
@@ -62,14 +63,17 @@ export class EmployeeAddComponent implements OnInit, PendingChangesGuard {
 
   onSubmit(): void {
     if (this.employeeForm.dirty && this.employeeForm.valid) {
+      this.employeeForm.value['dateOfBirth'] = new Date(
+        this.dateFormatter.setDate(this.employeeForm.value['dateOfBirth'])
+      );
       this.employeeService.addEmployee(this.employeeForm.value).subscribe({
         next: (response) => {
           this.employeeForm.reset();
           this.formGroupDirective.resetForm();
           this.toastr.success('Created successfully');
         },
-        error: (error) => {
-          this.toastr.error('Failed to create');
+        error: (error: HttpErrorResponse) => {
+          this.toastr.error(error.error);
           console.log(error);
         },
       });
@@ -83,30 +87,65 @@ export class EmployeeAddComponent implements OnInit, PendingChangesGuard {
       companyId: [null, Validators.required],
       firstName: [
         '',
-        [Validators.required, , Validators.pattern(/^[A-Za-z]+$/)],
+        [
+          Validators.required,
+          Validators.pattern(/^[A-Za-z]+$/),
+          Validators.minLength(4),
+          Validators.maxLength(100),
+        ],
       ],
       lastName: [
         '',
-        [Validators.required, , Validators.pattern(/^[A-Za-z]+$/)],
+        [
+          Validators.required,
+          Validators.pattern(/^[A-Za-z]+$/),
+          Validators.minLength(4),
+          Validators.maxLength(100),
+        ],
       ],
       gender: [null, Validators.required],
       dateOfBirth: ['', Validators.required],
-      address: ['', Validators.required],
-      city: ['', Validators.required],
-      country: ['', Validators.required],
+      address: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(4),
+          Validators.maxLength(100),
+        ],
+      ],
+      city: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(4),
+          Validators.maxLength(100),
+        ],
+      ],
+      country: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(4),
+          Validators.maxLength(100),
+          Validators.pattern(/^[A-Za-z]+$/),
+        ],
+      ],
       email: [
         '',
         [
           Validators.required,
           Validators.pattern(/^[\d\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/),
+          Validators.maxLength(50),
+          Validators.email,
         ],
       ],
       phoneNumber: [
         '',
         [
           Validators.required,
-          Validators.minLength(10),
           Validators.pattern(/^[\d]*$/),
+          Validators.minLength(10),
+          Validators.maxLength(12),
         ],
       ],
     });

@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import {
   FormBuilder,
@@ -14,6 +15,7 @@ import {
 } from 'src/app/guards/pending-changes.guard';
 import { Employee } from 'src/app/models/employee';
 import { CompanyService } from 'src/app/services/company.service';
+import { DateFormatService } from 'src/app/services/date-format.service';
 import { EmployeeService } from 'src/app/services/employee.service';
 
 @Component({
@@ -47,6 +49,7 @@ export class EmployeeEditComponent implements OnInit, PendingChangesGuard {
     private route: ActivatedRoute,
     private employeeService: EmployeeService,
     private companyService: CompanyService,
+    private dateFormatter: DateFormatService,
     private toastr: ToastrService
   ) {}
 
@@ -75,26 +78,67 @@ export class EmployeeEditComponent implements OnInit, PendingChangesGuard {
   initialForm() {
     this.employeeForm = this.formBuilder.group({
       companyId: [null, Validators.required],
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
+      firstName: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(/^[A-Za-z]+$/),
+          Validators.minLength(4),
+          Validators.maxLength(100),
+        ],
+      ],
+      lastName: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(/^[A-Za-z]+$/),
+          Validators.minLength(4),
+          Validators.maxLength(100),
+        ],
+      ],
       gender: [null, Validators.required],
       dateOfBirth: ['', Validators.required],
-      address: ['', Validators.required],
-      city: ['', Validators.required],
-      country: ['', Validators.required],
+      address: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(4),
+          Validators.maxLength(100),
+        ],
+      ],
+      city: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(4),
+          Validators.maxLength(100),
+        ],
+      ],
+      country: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(4),
+          Validators.maxLength(100),
+          Validators.pattern(/^[A-Za-z]+$/),
+        ],
+      ],
       email: [
         '',
         [
           Validators.required,
           Validators.pattern(/^[\d\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/),
+          Validators.maxLength(50),
+          Validators.email,
         ],
       ],
       phoneNumber: [
         '',
         [
           Validators.required,
-          Validators.minLength(10),
           Validators.pattern(/^[\d]*$/),
+          Validators.minLength(10),
+          Validators.maxLength(12),
         ],
       ],
     });
@@ -102,6 +146,9 @@ export class EmployeeEditComponent implements OnInit, PendingChangesGuard {
 
   onSubmit(): void {
     if (this.employeeForm.dirty && this.employeeForm.valid) {
+      this.employeeForm.value['dateOfBirth'] = new Date(
+        this.dateFormatter.setDate(this.employeeForm.value['dateOfBirth'])
+      );
       this.employeeService
         .editEmployee(this.employeeId, this.employeeForm.value)
         .subscribe({
@@ -110,8 +157,8 @@ export class EmployeeEditComponent implements OnInit, PendingChangesGuard {
             this.employeeForm.reset(updatedEmployee);
             this.toastr.success('Updated successfully');
           },
-          error: (error) => {
-            this.toastr.error('Failed to update');
+          error: (error: HttpErrorResponse) => {
+            this.toastr.error(error.error);
             console.log(error);
           },
         });

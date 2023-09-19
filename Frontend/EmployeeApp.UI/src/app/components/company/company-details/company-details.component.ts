@@ -49,13 +49,52 @@ export class CompanyDetailsComponent implements OnInit {
 
   initialForm() {
     this.companyForm = this.formBuilder.group({
-      companyName: [{ value: '', disabled: true }, Validators.required],
-      establishedAt: [{ value: '', disabled: true }, Validators.required],
-      address: [{ value: '', disabled: true }, Validators.required],
-      city: [{ value: '', disabled: true }, Validators.required],
-      country: [{ value: '', disabled: true }, Validators.required],
-      email: [{ value: '', disabled: true }, Validators.required],
-      phoneNumber: [{ value: '', disabled: true }, Validators.required],
+      companyName: [
+        { value: '', disabled: true },
+        [Validators.required, Validators.minLength(4)],
+      ],
+      establishedAt: [{ value: '', disabled: true }, [Validators.required]],
+      address: [
+        { value: '', disabled: true },
+        [
+          Validators.required,
+          Validators.minLength(4),
+          Validators.maxLength(100),
+        ],
+      ],
+      city: [
+        { value: '', disabled: true },
+        [
+          Validators.required,
+          Validators.minLength(4),
+          Validators.maxLength(50),
+        ],
+      ],
+      country: [
+        { value: '', disabled: true },
+        [
+          Validators.required,
+          Validators.minLength(4),
+          Validators.maxLength(50),
+        ],
+      ],
+      email: [
+        { value: '', disabled: true },
+        [
+          Validators.required,
+          Validators.pattern(/^[\d\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/),
+          Validators.email,
+        ],
+      ],
+      phoneNumber: [
+        { value: '', disabled: true },
+        [
+          Validators.required,
+          Validators.minLength(10),
+          Validators.pattern(/^[\d]*$/),
+          Validators.maxLength(12),
+        ],
+      ],
     });
   }
 

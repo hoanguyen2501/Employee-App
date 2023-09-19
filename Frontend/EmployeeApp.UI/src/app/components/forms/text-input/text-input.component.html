@@ -22,4 +22,7 @@
   <mat-error *ngIf="control.errors?.['pattern']">
     {{ label }} is <strong>invalid</strong>
   </mat-error>
+  <mat-error *ngIf="control.errors?.['email']">
+    This field must be an <strong>{{ label.toLowerCase() }}</strong> address
+  </mat-error>
 </mat-form-field>

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using EmployeeApp.Service.Helpers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
 namespace EmployeeApp.Api.Extensions
@@ -7,6 +8,8 @@ namespace EmployeeApp.Api.Extensions
     {
         public static IServiceCollection AddJwtIdentity(this IServiceCollection services, IConfiguration configuration)
         {
+            services.Configure<KeycloakSettings>(configuration.GetSection("Keycloak"));
+
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -14,8 +17,8 @@ namespace EmployeeApp.Api.Extensions
             })
             .AddJwtBearer(options =>
             {
-                string keycloakServerUrl = configuration["Keycloak:auth-server-url"] + $"realms/{configuration["Keycloak:realm"]}/";
-                string clientId = configuration["Keycloak:resource"];
+                string keycloakServerUrl = configuration["Keycloak:AuthServerUrl"] + $"realms/{configuration["Keycloak:Realm"]}/";
+                string clientId = configuration["Keycloak:Resource"];
                 options.Authority = keycloakServerUrl;
                 options.Audience = clientId;
                 options.TokenValidationParameters = new TokenValidationParameters
@@ -24,7 +27,7 @@ namespace EmployeeApp.Api.Extensions
                     ValidAudiences = new List<string> { "master-realm", "account", clientId },
                     ValidateIssuer = true,
                     ValidateAudience = true,
-                    ValidateLifetime = true,
+                    ValidateLifetime = false,
                     ValidateIssuerSigningKey = true,
                     ClockSkew = TimeSpan.Zero
                 };

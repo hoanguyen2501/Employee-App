@@ -21,8 +21,8 @@ namespace EmployeeApp.Api.Controllers
         public async Task<ActionResult<List<CompanyDto>>> GetCompanies()
         {
             List<CompanyDto> companies = await _companyService.GetCompaniesAsync();
-            if (companies == null)
-                return BadRequest();
+            if (companies == null || companies.Count == 0)
+                return NotFound();
 
             return Ok(companies);
         }
@@ -32,7 +32,7 @@ namespace EmployeeApp.Api.Controllers
         {
             CompanyDto company = await _companyService.GetCompanyByIdAsync(id);
             if (company == null)
-                return BadRequest();
+                return NotFound();
 
             return Ok(company);
         }
@@ -40,12 +40,10 @@ namespace EmployeeApp.Api.Controllers
         [HttpPost("add")]
         public async Task<ActionResult> CreateNewCompany(CreateCompanyDto createCompanyDto)
         {
-            bool isEmailExisted = await _companyService.CheckExistingCompanyEmail(createCompanyDto.Email);
-            if (isEmailExisted)
+            if (await _companyService.CheckExistingCompanyEmail(createCompanyDto.Email))
                 return BadRequest("Email has already taken");
 
-            bool isPhoneExisted = await _companyService.CheckExistingCompanyPhone(createCompanyDto.PhoneNumber);
-            if (isPhoneExisted)
+            if (await _companyService.CheckExistingCompanyPhone(createCompanyDto.PhoneNumber))
                 return BadRequest("Phone number has already taken");
 
             Guid? companyId = await _companyService.CreateCompany(createCompanyDto);

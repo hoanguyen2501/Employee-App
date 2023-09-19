@@ -12,6 +12,7 @@ namespace EmployeeApp.Domain.Repositories
         Task<TEntity> QueryByConditionsAsync(
             Expression<Func<TEntity, bool>> expression,
             params Expression<Func<TEntity, object>>[] includes);
+        Task<bool> IsExistedValue(Expression<Func<TEntity, bool>> expression);
         Task InsertAsync(TEntity entity);
         Task UpdateAsync(TEntity entity);
         Task DeleteAsync(Guid id);

@@ -1,26 +1,29 @@
 ﻿using EmployeeApp.Service.DTOs.AppUser;
+using EmployeeApp.Service.Helpers;
 using EmployeeApp.Service.Interfaces;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
 namespace EmployeeApp.Service.Services
 {
     public class AuthService : IAuthService
     {
-        private readonly IConfiguration _config;
-
-        public AuthService(IConfiguration config)
+        private readonly KeycloakSettings _keycloakSettings;
+        private readonly string authServerUrl;
+        private readonly string realm;
+        private readonly string clientId;
+        private readonly string secret;
+        public AuthService(IOptions<KeycloakSettings> keycloakSettings)
         {
-            _config = config;
+            _keycloakSettings = keycloakSettings.Value;
+            authServerUrl = _keycloakSettings.AuthServerUrl;
+            realm = _keycloakSettings.Realm;
+            clientId = _keycloakSettings.Resource;
+            secret = _keycloakSettings.Secret;
         }
 
         public async Task<AppUserDto> Login(AuthRequest loginDto)
         {
-            string realm = _config["Keycloak:realm"];
-            string clientId = _config["Keycloak:resource"];
-            string secret = _config["Keycloak:credentials:secret"];
-            string authServerUrl = $"{_config["Keycloak:auth-server-url"]}";
-
             string requestUrl = authServerUrl + $"realms/{realm}/protocol/openid-connect/token";
             Dictionary<string, string> requestBody = new()
             {
@@ -54,11 +57,6 @@ namespace EmployeeApp.Service.Services
 
         public async Task<AppUserDto> Refresh(string username, string refreshToken)
         {
-            string realm = _config["Keycloak:realm"];
-            string clientId = _config["Keycloak:resource"];
-            string secret = _config["Keycloak:credentials:secret"];
-            string authServerUrl = $"{_config["Keycloak:auth-server-url"]}";
-
             string requestUrl = authServerUrl + $"realms/{realm}/protocol/openid-connect/token";
             Dictionary<string, string> requestBody = new()
             {
@@ -91,11 +89,6 @@ namespace EmployeeApp.Service.Services
 
         public async Task<bool> Logout(string refreshToken)
         {
-            string realm = _config["Keycloak:realm"];
-            string clientId = _config["Keycloak:resource"];
-            string secret = _config["Keycloak:credentials:secret"];
-            string authServerUrl = $"{_config["Keycloak:auth-server-url"]}";
-
             string requestUrl = authServerUrl + $"realms/{realm}/protocol/openid-connect/logout";
             Dictionary<string, string> requestBody = new()
             {

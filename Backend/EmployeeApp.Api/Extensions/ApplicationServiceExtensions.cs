@@ -19,6 +19,7 @@ namespace EmployeeApp.Api.Extensions
                 {
                     builder.WithOrigins("https://localhost:4200")
                             .WithMethods("GET", "POST", "PUT", "PATCH", "DELETE")
+                            //.AllowAnyMethod()
                             .AllowCredentials()
                             .AllowAnyHeader();
                 });

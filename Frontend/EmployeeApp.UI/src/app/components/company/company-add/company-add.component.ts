@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import {
   FormBuilder,
@@ -12,6 +13,7 @@ import {
   PendingChangesGuard,
 } from 'src/app/guards/pending-changes.guard';
 import { CompanyService } from 'src/app/services/company.service';
+import { DateFormatService } from 'src/app/services/date-format.service';
 
 @Component({
   selector: 'app-company-add',
@@ -33,7 +35,8 @@ export class CompanyAddComponent implements OnInit, PendingChangesGuard {
   constructor(
     private formBuilder: FormBuilder,
     private companyService: CompanyService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private dateFormatter: DateFormatService
   ) {}
 
   canDeactivate(
@@ -50,14 +53,17 @@ export class CompanyAddComponent implements OnInit, PendingChangesGuard {
 
   onSubmit(): void {
     if (this.companyForm.dirty && this.companyForm.valid) {
+      this.companyForm.value['establishedAt'] = new Date(
+        this.dateFormatter.setDate(this.companyForm.value['establishedAt'])
+      );
       this.companyService.addCompany(this.companyForm.value).subscribe({
         next: (response) => {
           this.companyForm.reset();
           this.formGroupDirective.resetForm();
-          this.toastr.success('Created successfully', 'Success');
+          this.toastr.success('Created successfully');
         },
-        error: (error) => {
-          this.toastr.error('Failed to create', 'Failure');
+        error: (error: HttpErrorResponse) => {
+          this.toastr.error(error.error);
           console.log(error);
         },
       });
@@ -68,16 +74,38 @@ export class CompanyAddComponent implements OnInit, PendingChangesGuard {
 
   initialForm() {
     this.companyForm = this.formBuilder.group({
-      companyName: ['', Validators.required],
-      establishedAt: ['', Validators.required],
-      address: ['', Validators.required],
-      city: ['', Validators.required],
-      country: ['', Validators.required],
+      companyName: ['', [Validators.required, Validators.minLength(4)]],
+      establishedAt: ['', [Validators.required]],
+      address: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(4),
+          Validators.maxLength(100),
+        ],
+      ],
+      city: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(4),
+          Validators.maxLength(50),
+        ],
+      ],
+      country: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(4),
+          Validators.maxLength(50),
+        ],
+      ],
       email: [
         '',
         [
           Validators.required,
           Validators.pattern(/^[\d\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/),
+          Validators.email,
         ],
       ],
       phoneNumber: [
@@ -86,12 +114,13 @@ export class CompanyAddComponent implements OnInit, PendingChangesGuard {
           Validators.required,
           Validators.minLength(10),
           Validators.pattern(/^[\d]*$/),
+          Validators.maxLength(12),
         ],
       ],
     });
   }
 
-  onReset(): void {
+  onCancel(): void {
     if (this.companyForm.dirty) {
       const isReset = confirm(
         'WARNING: You have unsaved changes. Press Cancel to go back and save these changes, or OK to lose these changes.'

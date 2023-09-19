@@ -39,7 +39,6 @@ import { TextInputComponent } from './components/forms/text-input/text-input.com
 import { HomeComponent } from './components/home/home.component';
 import { SideNavComponent } from './components/navigation/side-nav/side-nav.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
-import { ErrorInterceptor } from './interceptors/error.interceptor';
 import { LoadingInterceptor } from './interceptors/loading.interceptor';
 
 @NgModule({
@@ -95,11 +94,11 @@ import { LoadingInterceptor } from './interceptors/loading.interceptor';
     }),
   ],
   providers: [
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: ErrorInterceptor,
-      multi: true,
-    },
+    // {
+    //   provide: HTTP_INTERCEPTORS,
+    //   useClass: ErrorInterceptor,
+    //   multi: true,
+    // },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,

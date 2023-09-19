@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EmployeeApp.Service.DTOs.AppUser;
 using EmployeeApp.Service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeeApp.Api.Controllers
@@ -19,6 +20,7 @@ namespace EmployeeApp.Api.Controllers
             _mapper = mapper;
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<ActionResult<AuthResponse>> Login(AuthRequest loginDto)
         {
@@ -28,26 +30,26 @@ namespace EmployeeApp.Api.Controllers
 
             AuthResponse authResponse = _mapper.Map<AuthResponse>(appUser);
 
-            HttpContext.Response.Cookies.Append(
+            Response.Cookies.Append(
                 "X-Username",
                 authResponse.Username,
                 new CookieOptions { HttpOnly = true, SameSite = SameSiteMode.Strict });
-            HttpContext.Response.Cookies.Append(
+            Response.Cookies.Append(
                 "X-Access-Token",
                 authResponse.AccessToken,
                 new CookieOptions { HttpOnly = true, SameSite = SameSiteMode.Strict });
-            HttpContext.Response.Cookies.Append(
+            Response.Cookies.Append(
                 "X-Refresh-Token",
                 appUser.RefreshToken,
                 new CookieOptions { HttpOnly = true, SameSite = SameSiteMode.Strict });
 
             var message = new
             {
-                host = HttpContext.Request.Host.ToString(),
-                path = HttpContext.Request.Path,
-                method = HttpContext.Request.Method,
-                title = HttpContext.Request.RouteValues,
-                statusCode = HttpContext.Response.StatusCode,
+                host = Request.Host.ToString(),
+                path = Request.Path,
+                method = Request.Method,
+                title = Request.RouteValues,
+                statusCode = Response.StatusCode,
                 message = "Logged in successfully",
                 data = appUser,
             };
@@ -56,6 +58,7 @@ namespace EmployeeApp.Api.Controllers
             return Ok(authResponse);
         }
 
+        [Authorize]
         [HttpPost("refresh")]
         public async Task<ActionResult<AuthResponse>> Refresh()
         {
@@ -85,11 +88,11 @@ namespace EmployeeApp.Api.Controllers
 
             var message = new
             {
-                host = HttpContext.Request.Host.ToString(),
-                path = HttpContext.Request.Path,
-                method = HttpContext.Request.Method,
-                title = HttpContext.Request.RouteValues,
-                statusCode = HttpContext.Response.StatusCode,
+                host = Request.Host.ToString(),
+                path = Request.Path,
+                method = Request.Method,
+                title = Request.RouteValues,
+                statusCode = Response.StatusCode,
                 message = "Refresh access token successfully",
                 data = refreshedAppUser,
             };
@@ -98,6 +101,7 @@ namespace EmployeeApp.Api.Controllers
             return Ok(authResponse);
         }
 
+        [AllowAnonymous]
         [HttpPost("logout")]
         public async Task<ActionResult> Logout()
         {

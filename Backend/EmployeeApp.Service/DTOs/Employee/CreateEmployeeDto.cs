@@ -13,5 +13,7 @@ namespace EmployeeApp.Service.DTOs.Employee
         public string PhoneNumber { get; set; }
         public string ImageUrl { get; set; } = "./assets/user.png";
         public Guid? CompanyId { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     }
 }
